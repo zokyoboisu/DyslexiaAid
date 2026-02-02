@@ -507,6 +507,59 @@ h2 {
     min-width: 200px;
 }
 
+/* Screen 5 Layout Styles */
+.screen5-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-purple);
+    margin-bottom: var(--spacing-md);
+}
+
+.question-line {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.question-text-inline {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-blue);
+    margin: 0;
+    flex: 1;
+    min-width: 250px;
+}
+
+.instruction-text-inline {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-purple);
+    margin: 0;
+    flex: 1;
+    min-width: 250px;
+}
+
+.strategy-instruction {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md);
+    background: rgba(123, 73, 171, 0.1);
+    border-radius: var(--border-radius);
+    border-left: 5px solid var(--primary-purple);
+}
+
+.strategy-instruction.hidden {
+    display: none;
+}
+
+.strategy-instruction .instruction-text-inline {
+    flex: 1;
+}
+
 /* Result Text */
 .result-text {
     font-size: 16px;

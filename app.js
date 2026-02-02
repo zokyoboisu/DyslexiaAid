@@ -37,11 +37,24 @@ function initializeApp() {
     // Initialize listen buttons
     initializeListenButtons();
 
+    // Initialize Screen 4 instruction speaker button
+    initializeScreen4InstructionSpeaker();
+
     // Initialize practice color picker (Screen 5)
     initializePracticeColorPicker();
 
     // Set initial background swatch as active
     document.querySelector('.swatch[data-color="#FFF9E6"]').classList.add('active');
+}
+
+// Screen 4 instruction speaker button
+function initializeScreen4InstructionSpeaker() {
+    const btn = document.getElementById('screen4-instruction-speaker');
+    if (btn) {
+        btn.addEventListener('click', function() {
+            speakText("Colour coding is important for processing information easier and allows those to identity the answer faster. So, let's colour code each language.");
+        });
+    }
 }
 
 // ============================================
@@ -60,23 +73,31 @@ function selectAustralianVoice() {
     const voices = speechSynthesis.getVoices();
 
     // Priority list for Australian female voices
-    const priorityPatterns = [
-        /australian.*female/i,
-        /en-AU.*female/i,
-        /australia/i,
-        /en-AU/i,
-        /karen/i,
-        /female.*english/i,
-        /en-.*female/i,
-        /samantha/i,
-        /victoria/i,
-        /female/i,
-        /en-GB/i,
-        /en-US/i
+    // Looking for en-AU voices first, preferring female voices
+    const priorityChecks = [
+        // Google/Cloud voices (Neural2-A is female Australian)
+        v => v.name.includes('en-AU') && v.name.includes('Neural2-A'),
+        v => v.name.includes('en-AU') && v.name.toLowerCase().includes('female'),
+        v => v.name.includes('en-AU-Wavenet') && v.name.includes('-A'),
+        v => v.name.includes('en-AU-Wavenet') && v.name.includes('-C'),
+        // Microsoft voices
+        v => v.name.includes('Catherine') || v.name.includes('Natasha'),
+        // Any Australian voice
+        v => v.lang === 'en-AU',
+        v => v.name.toLowerCase().includes('australia'),
+        // Female English voices as fallback
+        v => v.name.toLowerCase().includes('karen'),
+        v => v.name.toLowerCase().includes('samantha'),
+        v => v.name.toLowerCase().includes('victoria'),
+        v => v.name.toLowerCase().includes('female') && v.lang.startsWith('en'),
+        // Any English voice
+        v => v.lang === 'en-GB',
+        v => v.lang === 'en-US',
+        v => v.lang.startsWith('en')
     ];
 
-    for (const pattern of priorityPatterns) {
-        const voice = voices.find(v => pattern.test(v.name) || pattern.test(v.lang));
+    for (const check of priorityChecks) {
+        const voice = voices.find(check);
         if (voice) {
             selectedVoice = voice;
             console.log('Selected voice:', voice.name, voice.lang);
@@ -84,8 +105,8 @@ function selectAustralianVoice() {
         }
     }
 
-    // Fallback to first English voice
-    selectedVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+    // Fallback to first available voice
+    selectedVoice = voices[0];
     if (selectedVoice) {
         console.log('Fallback voice:', selectedVoice.name, selectedVoice.lang);
     }
@@ -344,12 +365,36 @@ async function animateColorSelection(color, word, spokenText) {
 // ============================================
 // Screen 5 - Practice Interactive (User-Driven)
 // ============================================
+
+// Track word colors for results display
+let wordColorMap = {};
+
 function initializePracticeColorPicker() {
     const colorButtons = document.querySelectorAll('.practice-color');
     const practiceWords = document.querySelectorAll('#practice-options .word');
+    const practiceCheckboxes = document.querySelectorAll('input[name="practice-answer"]');
 
     // Count total words to highlight
     totalWordsToHighlight = practiceWords.length;
+
+    // Make checkboxes function as radio buttons
+    practiceCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Uncheck all other checkboxes
+                practiceCheckboxes.forEach(cb => {
+                    if (cb !== this) {
+                        cb.checked = false;
+                    }
+                });
+
+                // Show check answers button if highlighting is complete
+                if (highlightedWords.size >= totalWordsToHighlight) {
+                    document.getElementById('check-answers-btn').classList.remove('hidden');
+                }
+            }
+        });
+    });
 
     // Color button click - select color and speak instruction
     colorButtons.forEach(btn => {
@@ -368,6 +413,9 @@ function initializePracticeColorPicker() {
             // Store selected color and word
             selectedPracticeColor = color;
             selectedPracticeWord = word;
+
+            // Store color mapping for this word
+            wordColorMap[word] = color;
 
             // Speak instruction
             speakText(`Highlight the word ${word} with ${getColorName(color)}.`);
@@ -428,7 +476,8 @@ function initializePracticeColorPicker() {
                 // Check if all words have been highlighted
                 if (highlightedWords.size >= totalWordsToHighlight) {
                     setTimeout(() => {
-                        document.getElementById('check-answers-btn').classList.remove('hidden');
+                        // Show strategy instruction
+                        document.getElementById('strategy-instruction').classList.remove('hidden');
                     }, 500);
                 }
             } else {
@@ -466,43 +515,54 @@ async function checkPracticeAnswers() {
 
     const resultDiv = document.getElementById('practice-result');
     resultDiv.classList.remove('hidden');
+    resultDiv.innerHTML = '';
 
-    // Explain Id (appears 3 times: a, b, d)
-    await speakTextWithPromise('There are 3 answers that are coloured pink for Id.');
+    // Word data: word name, count, color, color name
+    const wordData = [
+        { word: 'Id', count: 3, color: '#FF6699', colorName: 'pink' },
+        { word: 'Ego', count: 3, color: '#00CC66', colorName: 'green' },
+        { word: 'Superego', count: 2, color: '#FF4343', colorName: 'red' },
+        { word: 'Conscious', count: 1, color: '#FFFF00', colorName: 'yellow' },
+        { word: 'Unconscious', count: 1, color: '#808080', colorName: 'grey' },
+        { word: 'Aware', count: 1, color: '#0E6FFE', colorName: 'blue' },
+        { word: 'Brain', count: 1, color: '#069494', colorName: 'teal' }
+    ];
 
-    const idWords = document.querySelectorAll('#practice-options .word[data-word="Id"]');
-    idWords.forEach(w => {
-        w.classList.add('flash');
-    });
-    await delay(1200);
-    idWords.forEach(w => w.classList.remove('flash'));
+    // Process each word
+    for (const data of wordData) {
+        const resultText = `There are ${data.count} answers that are coloured ${data.colorName} for ${data.word}.`;
 
-    // Explain Ego (appears 3 times: a, c, d)
-    await speakTextWithPromise('There are 3 answers that are coloured green for Ego.');
+        // Add to result div
+        const p = document.createElement('p');
+        p.innerHTML = resultText;
+        resultDiv.appendChild(p);
 
-    const egoWords = document.querySelectorAll('#practice-options .word[data-word="Ego"]');
-    egoWords.forEach(w => {
-        w.classList.add('flash');
-    });
-    await delay(1200);
-    egoWords.forEach(w => w.classList.remove('flash'));
+        // Speak the result
+        await speakTextWithPromise(resultText);
 
-    // Explain Superego (appears 2 times: c, d)
-    await speakTextWithPromise('There are 2 answers that are coloured red for Superego.');
+        // Flash the words
+        const words = document.querySelectorAll(`#practice-options .word[data-word="${data.word}"]`);
+        words.forEach(w => {
+            w.classList.add('flash');
+        });
+        await delay(1200);
+        words.forEach(w => w.classList.remove('flash'));
 
-    const superegoWords = document.querySelectorAll('#practice-options .word[data-word="Superego"]');
-    superegoWords.forEach(w => {
-        w.classList.add('flash');
-    });
-    await delay(1200);
-    superegoWords.forEach(w => w.classList.remove('flash'));
+        await delay(300);
+    }
 
-    // Show final answer
-    resultDiv.innerHTML = '<p>Based on the strategy, the answer is d as all the words have been coloured multiple times.</p>';
+    // Add final explanation
+    const finalText = document.createElement('p');
+    finalText.style.marginTop = '16px';
+    finalText.style.fontWeight = 'bold';
+    finalText.innerHTML = 'Based on the strategy, the answer is d as the words Id, Ego, and Superego appear most frequently across the options.';
+    resultDiv.appendChild(finalText);
 
-    await speakTextWithPromise('Based on the strategy, the answer is d as all the words have been coloured multiple times.');
+    await speakTextWithPromise('Based on the strategy, the answer is d as the words Id, Ego, and Superego appear most frequently across the options.');
 
-    // Check the correct answer
+    // Check the correct answer (d)
+    const practiceCheckboxes = document.querySelectorAll('input[name="practice-answer"]');
+    practiceCheckboxes.forEach(cb => cb.checked = false);
     document.getElementById('practice-d').checked = true;
 
     // Show congratulations
