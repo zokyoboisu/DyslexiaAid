@@ -737,3 +737,126 @@ h2 {
         background: white;
     }
 }
+
+/* ============================================
+   Compact Spacing for Screen 4 and Screen 5
+   ============================================ */
+
+#screen4,
+#screen5 {
+    line-height: 1.5;
+}
+
+/* Reduce color picker spacing */
+#screen4 .color-picker,
+#screen5 .color-picker {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    gap: var(--spacing-xs);
+}
+
+/* Reduce instruction text spacing */
+#screen4 .instruction-text,
+#screen5 .instruction-text {
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm);
+}
+
+/* Compact question container */
+#screen4 .question-container,
+#screen5 .question-container {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+#screen4 .question-text,
+#screen5 .question-text {
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-xs);
+}
+
+/* Compact options */
+#screen4 .options-container,
+#screen5 .options-container {
+    gap: var(--spacing-xs);
+}
+
+#screen4 .option,
+#screen5 .option {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-height: 44px;
+    gap: var(--spacing-sm);
+}
+
+#screen4 .checkmark,
+#screen5 .checkmark {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+}
+
+#screen4 .option input[type="checkbox"]:checked + .checkmark::after,
+#screen5 .option input[type="checkbox"]:checked + .checkmark::after {
+    font-size: 16px;
+}
+
+/* Compact color code instruction */
+#screen4 .color-code-instruction {
+    margin-bottom: var(--spacing-sm);
+}
+
+#screen4 .color-code-instruction .intro-text {
+    padding: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+/* Compact demo controls */
+#screen4 .demo-controls {
+    margin: var(--spacing-sm) 0;
+}
+
+/* Compact result text */
+#screen4 .result-text,
+#screen5 .result-text {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-sm) 0;
+}
+
+/* Compact navigation */
+#screen4 .nav-buttons,
+#screen5 .nav-buttons {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-sm);
+}
+
+/* Screen 5 specific compact styles */
+#screen5 .screen5-title {
+    margin-bottom: var(--spacing-xs);
+}
+
+#screen5 .question-line {
+    margin-bottom: var(--spacing-xs);
+}
+
+#screen5 .strategy-instruction {
+    margin: var(--spacing-sm) 0;
+    padding: var(--spacing-sm);
+}
+
+#screen5 .action-btn {
+    margin: var(--spacing-sm) auto;
+}
+
+#screen5 .congrats-box {
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+#screen5 .congrats-box p {
+    margin-bottom: var(--spacing-xs);
+}
+
+#screen5 .congrats-box p:last-child {
+    font-size: 20px;
+}
+
