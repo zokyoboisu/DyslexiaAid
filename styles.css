@@ -276,7 +276,7 @@ h2 {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Color Picker - Floating/Sticky */
+/* Color Picker - Base Styles */
 .color-picker {
     display: flex;
     align-items: center;
@@ -288,6 +288,10 @@ h2 {
     margin-bottom: var(--spacing-lg);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--primary-teal);
+}
+
+/* Screen 5 Color Picker - Floating/Sticky */
+#practice-color-picker {
     position: sticky;
     top: 80px; /* Below the controls bar */
     z-index: 100;
