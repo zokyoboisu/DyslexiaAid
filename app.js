@@ -377,7 +377,12 @@ function initializePracticeColorPicker() {
     // Count total words to highlight
     totalWordsToHighlight = practiceWords.length;
 
-    // Make checkboxes function as radio buttons
+    // Disable checkboxes initially - they should only be enabled after highlighting is complete
+    practiceCheckboxes.forEach(checkbox => {
+        checkbox.disabled = true;
+    });
+
+    // Make checkboxes function as radio buttons (when enabled)
     practiceCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             if (this.checked) {
@@ -388,10 +393,8 @@ function initializePracticeColorPicker() {
                     }
                 });
 
-                // Show check answers button if highlighting is complete
-                if (highlightedWords.size >= totalWordsToHighlight) {
-                    document.getElementById('check-answers-btn').classList.remove('hidden');
-                }
+                // Show check answers button
+                document.getElementById('check-answers-btn').classList.remove('hidden');
             }
         });
     });
@@ -478,6 +481,12 @@ function initializePracticeColorPicker() {
                     setTimeout(() => {
                         // Show strategy instruction
                         document.getElementById('strategy-instruction').classList.remove('hidden');
+
+                        // Enable checkboxes now that highlighting is complete
+                        const checkboxes = document.querySelectorAll('input[name="practice-answer"]');
+                        checkboxes.forEach(cb => {
+                            cb.disabled = false;
+                        });
                     }, 500);
                 }
             } else {

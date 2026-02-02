@@ -860,3 +860,18 @@ h2 {
     font-size: 20px;
 }
 
+/* Disabled checkboxes on Screen 5 during highlighting phase */
+#screen5 .option:has(input[type="checkbox"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#screen5 .option:has(input[type="checkbox"]:disabled) .checkmark {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+#screen5 .option:has(input[type="checkbox"]:disabled):hover {
+    background: #f8f9fa;
+    border-color: transparent;
+}
