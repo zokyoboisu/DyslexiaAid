@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyslexia Aid - Multiple Choice Strategies</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Load Dyslexie-like fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Controls Bar -->
+    <header class="controls-bar">
+        <div class="control-group">
+            <label for="font-select">Font:</label>
+            <select id="font-select" aria-label="Select font">
+                <option value="'Comic Neue', cursive">Comic Sans</option>
+                <option value="'OpenDyslexic', sans-serif">OpenDyslexic</option>
+                <option value="cursive">Cavolini</option>
+                <option value="'Segoe Script', cursive">Victorian Cursive</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Background:</label>
+            <div class="color-swatches">
+                <button class="swatch" data-color="#FFF9E6" style="background-color: #FFF9E6;" aria-label="Cream background" title="Cream"></button>
+                <button class="swatch" data-color="#E6F3FF" style="background-color: #E6F3FF;" aria-label="Light blue background" title="Light Blue"></button>
+                <button class="swatch" data-color="#F0E6FF" style="background-color: #F0E6FF;" aria-label="Light purple background" title="Light Purple"></button>
+                <button class="swatch" data-color="#E6FFE6" style="background-color: #E6FFE6;" aria-label="Light green background" title="Light Green"></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        <!-- Screen 1 -->
+        <section id="screen1" class="screen active">
+            <h2>Multiple Choice Predicting Strategies</h2>
+            <p class="intro-text">
+                Educated predicting strategies are not a substitute for good study habits and test preparation. They are not foolproof and will not guarantee the correct answer. Predictive strategies, however, help when you are not completely sure of the answer, and will assist you to either narrow down the choices or to choose between two reasonably good answers. Using these strategies will assist to improve your test results.
+            </p>
+            <button class="listen-btn" data-target="screen1-content" aria-label="Listen to content">
+                <img src="Speaker40.png" alt="Speaker icon" class="speaker-icon">
+                Listen
+            </button>
+            <div class="nav-buttons">
+                <button class="next-btn" onclick="goToScreen(2)">Next</button>
+            </div>
+        </section>
+
+        <!-- Screen 2 -->
+        <section id="screen2" class="screen">
+            <h2>Strategy 1: Frequency of occurrence strategy</h2>
+            <p class="intro-text">
+                Look for items that appear in more than one of the multiple choices even if you may not know the answer.
+            </p>
+            <button class="listen-btn" data-target="screen2-content" aria-label="Listen to content">
+                <img src="Speaker40.png" alt="Speaker icon" class="speaker-icon">
+                Listen
+            </button>
+            <div class="nav-buttons">
+                <button class="next-btn" onclick="goToScreen(3)">Next</button>
+            </div>
+        </section>
+
+        <!-- Screen 3 -->
+        <section id="screen3" class="screen">
+            <p class="intro-text">
+                Let's have a look at how this strategy works. Listen to the question and follow the instructions to work out the answer.
+            </p>
+            <button class="listen-btn" data-target="screen3-content" aria-label="Listen to content">
+                <img src="Speaker40.png" alt="Speaker icon" class="speaker-icon">
+                Listen
+            </button>
+            <div class="nav-buttons">
+                <button class="next-btn" onclick="goToScreen(4)">Next</button>
+            </div>
+        </section>
+
+        <!-- Screen 4 -->
+        <section id="screen4" class="screen">
+            <div id="demo-color-picker" class="color-picker hidden">
+                <span class="picker-label">Colour Picker:</span>
+                <button class="color-btn" data-color="#FF6699" style="background-color: #FF6699;" aria-label="Pink"></button>
+                <button class="color-btn" data-color="#00CC66" style="background-color: #00CC66;" aria-label="Green"></button>
+                <button class="color-btn" data-color="#FFFF00" style="background-color: #FFFF00;" aria-label="Yellow"></button>
+                <button class="color-btn" data-color="#0E6FFE" style="background-color: #0E6FFE;" aria-label="Blue"></button>
+                <button class="color-btn" data-color="#069494" style="background-color: #069494;" aria-label="Teal"></button>
+                <button class="color-btn" data-color="#FF4343" style="background-color: #FF4343;" aria-label="Red"></button>
+            </div>
+
+            <p class="instruction-text">Practice multiple choice question 1 with guidance.</p>
+
+            <div class="question-container">
+                <p class="question-text">
+                    Demo Question - What are the major languages spoken in the Caribbean Islands?
+                    <button class="speaker-btn" onclick="speakText('What are the major languages spoken in the Caribbean Islands?')" aria-label="Listen to question">
+                        <img src="Speaker40.png" alt="Speaker icon">
+                    </button>
+                </p>
+
+                <div class="options-container" id="demo-options">
+                    <label class="option">
+                        <input type="checkbox" name="demo-answer" value="a" id="demo-a">
+                        <span class="checkmark"></span>
+                        <span class="option-text">a. <span class="word" data-word="Spanish">Spanish</span> and <span class="word" data-word="Greek">Greek</span></span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="demo-answer" value="b" id="demo-b">
+                        <span class="checkmark"></span>
+                        <span class="option-text">b. <span class="word" data-word="English">English</span> and <span class="word" data-word="Spanish">Spanish</span></span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="demo-answer" value="c" id="demo-c">
+                        <span class="checkmark"></span>
+                        <span class="option-text">c. <span class="word" data-word="Chinese">Chinese</span> and <span class="word" data-word="Italian">Italian</span></span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="demo-answer" value="d" id="demo-d">
+                        <span class="checkmark"></span>
+                        <span class="option-text">d. <span class="word" data-word="Dutch">Dutch</span> and <span class="word" data-word="English">English</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="color-code-instruction">
+                <p class="intro-text">
+                    Colour coding is important for processing information easier and allows those to identity the answer faster. So, let's colour code each language.
+                </p>
+                <button class="speaker-btn inline-speaker" onclick="speakText('Colour coding is important for processing information easier and allows those to identity the answer faster. So, let\\'s colour code each language.')" aria-label="Listen to instruction">
+                    <img src="Speaker30.png" alt="Speaker icon">
+                </button>
+            </div>
+
+            <div class="demo-controls">
+                <button id="start-demo-btn" class="action-btn" onclick="startDemo()">Start the demo</button>
+            </div>
+
+            <div id="demo-result" class="result-text hidden"></div>
+
+            <div class="nav-buttons">
+                <button class="next-btn" onclick="goToScreen(5)">Next</button>
+            </div>
+
+            <!-- Animated cursor for demo -->
+            <div id="demo-cursor" class="demo-cursor hidden">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4L10 20L12 14L18 12L4 4Z" fill="#333" stroke="#fff" stroke-width="1"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Screen 5 -->
+        <section id="screen5" class="screen">
+            <div id="practice-color-picker" class="color-picker">
+                <span class="picker-label">Colour Picker:</span>
+                <button class="color-btn practice-color" data-color="#FF6699" data-word="Id" style="background-color: #FF6699;" aria-label="Pink for Id"></button>
+                <button class="color-btn practice-color" data-color="#00CC66" data-word="Ego" style="background-color: #00CC66;" aria-label="Green for Ego"></button>
+                <button class="color-btn practice-color" data-color="#FFFF00" data-word="Conscious" style="background-color: #FFFF00;" aria-label="Yellow for Conscious"></button>
+                <button class="color-btn practice-color" data-color="#808080" data-word="Unconscious" style="background-color: #808080;" aria-label="Grey for Unconscious"></button>
+                <button class="color-btn practice-color" data-color="#0E6FFE" data-word="Aware" style="background-color: #0E6FFE;" aria-label="Blue for Aware"></button>
+                <button class="color-btn practice-color" data-color="#069494" data-word="Brain" style="background-color: #069494;" aria-label="Teal for Brain"></button>
+                <button class="color-btn practice-color" data-color="#FF4343" data-word="Superego" style="background-color: #FF4343;" aria-label="Red for Superego"></button>
+            </div>
+
+            <p class="instruction-text">Time to have a go. Listen and read the question. Then highlight the answer, even if you may not know the answer.</p>
+
+            <div class="question-container">
+                <p class="question-text">
+                    Practice Question 2 for student: Freud claimed that there are 3 parts of the mind. What were the 3 parts:
+                    <button class="speaker-btn" onclick="speakText('Freud claimed that there are 3 parts of the mind. What were the 3 parts')" aria-label="Listen to question">
+                        <img src="Speaker40.png" alt="Speaker icon">
+                    </button>
+                </p>
+
+                <div class="options-container" id="practice-options">
+                    <label class="option">
+                        <input type="checkbox" name="practice-answer" value="a" id="practice-a">
+                        <span class="checkmark"></span>
+                        <span class="option-text">a. <span class="word" data-word="Id">Id</span>, <span class="word" data-word="Ego">Ego</span>, and <span class="word" data-word="Conscious">Conscious</span></span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="practice-answer" value="b" id="practice-b">
+                        <span class="checkmark"></span>
+                        <span class="option-text">b. <span class="word" data-word="Unconscious">Unconscious</span>, <span class="word" data-word="Id">Id</span>, and <span class="word" data-word="Aware">Aware</span></span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="practice-answer" value="c" id="practice-c">
+                        <span class="checkmark"></span>
+                        <span class="option-text">c. <span class="word" data-word="Superego">Superego</span>, <span class="word" data-word="Ego">Ego</span> and <span class="word" data-word="Brain">Brain</span></span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" name="practice-answer" value="d" id="practice-d">
+                        <span class="checkmark"></span>
+                        <span class="option-text">d. <span class="word" data-word="Ego">Ego</span>, <span class="word" data-word="Superego">Superego</span> and <span class="word" data-word="Id">Id</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <p class="intro-text" id="color-code-prompt">Colour code the answers using the clicker.</p>
+
+            <div id="practice-result" class="result-text hidden"></div>
+
+            <button id="check-answers-btn" class="action-btn hidden" onclick="checkPracticeAnswers()">Check your answers against the correct answers below.</button>
+
+            <div id="congratulations-box" class="congrats-box hidden">
+                <p>Congratulations on working on a year 12 psychology exam question.</p>
+                <p>Even if you did not know the answer, the strategy worked!</p>
+                <p>Well done!</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
