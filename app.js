@@ -10,8 +10,12 @@ let currentScreen = 1;
 let isSpeaking = false;
 let speechSynthesis = window.speechSynthesis;
 let selectedVoice = null;
-let practiceColorsClicked = new Set();
-const totalPracticeColors = 7;
+
+// Screen 5 Practice State
+let selectedPracticeColor = null;
+let selectedPracticeWord = null;
+let highlightedWords = new Set(); // Track which word instances have been highlighted
+let totalWordsToHighlight = 0; // Will be calculated on init
 
 // ============================================
 // Initialization
@@ -338,39 +342,106 @@ async function animateColorSelection(color, word, spokenText) {
 }
 
 // ============================================
-// Screen 5 - Practice Interactive
+// Screen 5 - Practice Interactive (User-Driven)
 // ============================================
 function initializePracticeColorPicker() {
     const colorButtons = document.querySelectorAll('.practice-color');
+    const practiceWords = document.querySelectorAll('#practice-options .word');
 
+    // Count total words to highlight
+    totalWordsToHighlight = practiceWords.length;
+
+    // Color button click - select color and speak instruction
     colorButtons.forEach(btn => {
         btn.addEventListener('click', function() {
-            if (this.disabled) return;
+            if (this.disabled || isSpeaking) return;
 
             const color = this.dataset.color;
             const word = this.dataset.word;
 
-            // Disable button after click
-            this.disabled = true;
+            // Remove selected class from all color buttons
+            colorButtons.forEach(b => b.classList.remove('selected'));
+
+            // Add selected class to this button
+            this.classList.add('selected');
+
+            // Store selected color and word
+            selectedPracticeColor = color;
+            selectedPracticeWord = word;
 
             // Speak instruction
             speakText(`Highlight the word ${word} with ${getColorName(color)}.`);
+        });
+    });
 
-            // Highlight all instances of the word
-            const words = document.querySelectorAll(`#practice-options .word[data-word="${word}"]`);
-            words.forEach(w => {
-                w.style.backgroundColor = color;
-                w.classList.add('highlighted');
-            });
+    // Word click - highlight if color is selected and word matches
+    practiceWords.forEach((wordEl, index) => {
+        // Make words clickable
+        wordEl.style.cursor = 'pointer';
+        wordEl.setAttribute('tabindex', '0');
+        wordEl.setAttribute('role', 'button');
 
-            // Track clicked colors
-            practiceColorsClicked.add(word);
+        const handleWordClick = function() {
+            // Check if a color is selected
+            if (!selectedPracticeColor || !selectedPracticeWord) {
+                speakText('Please select a colour from the colour picker first.');
+                return;
+            }
 
-            // Check if all colors have been clicked
-            if (practiceColorsClicked.size >= totalPracticeColors) {
-                setTimeout(() => {
-                    document.getElementById('check-answers-btn').classList.remove('hidden');
-                }, 1000);
+            // Check if this word is already highlighted
+            const wordId = `${wordEl.dataset.word}-${index}`;
+            if (highlightedWords.has(wordId)) {
+                return; // Already highlighted
+            }
+
+            const clickedWord = wordEl.dataset.word;
+
+            // Check if the clicked word matches the expected word for the selected color
+            if (clickedWord === selectedPracticeWord) {
+                // Correct! Highlight this word
+                wordEl.style.backgroundColor = selectedPracticeColor;
+                wordEl.classList.add('highlighted');
+                highlightedWords.add(wordId);
+
+                // Check if all instances of this word are highlighted
+                const allInstancesOfWord = document.querySelectorAll(`#practice-options .word[data-word="${clickedWord}"]`);
+                let allHighlighted = true;
+                allInstancesOfWord.forEach((w, i) => {
+                    const wId = `${w.dataset.word}-${Array.from(practiceWords).indexOf(w)}`;
+                    if (!highlightedWords.has(wId)) {
+                        allHighlighted = false;
+                    }
+                });
+
+                // If all instances of this word are highlighted, disable the color button
+                if (allHighlighted) {
+                    const colorBtn = document.querySelector(`.practice-color[data-word="${clickedWord}"]`);
+                    if (colorBtn) {
+                        colorBtn.disabled = true;
+                        colorBtn.classList.remove('selected');
+                    }
+                    // Clear selection
+                    selectedPracticeColor = null;
+                    selectedPracticeWord = null;
+                }
+
+                // Check if all words have been highlighted
+                if (highlightedWords.size >= totalWordsToHighlight) {
+                    setTimeout(() => {
+                        document.getElementById('check-answers-btn').classList.remove('hidden');
+                    }, 500);
+                }
+            } else {
+                // Wrong word - give feedback
+                speakText(`That's ${clickedWord}. Please highlight ${selectedPracticeWord}.`);
+            }
+        };
+
+        wordEl.addEventListener('click', handleWordClick);
+        wordEl.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleWordClick();
             }
         });
     });

@@ -276,7 +276,7 @@ h2 {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Color Picker */
+/* Color Picker - Floating/Sticky */
 .color-picker {
     display: flex;
     align-items: center;
@@ -286,8 +286,11 @@ h2 {
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing-lg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--primary-teal);
+    position: sticky;
+    top: 80px; /* Below the controls bar */
+    z-index: 100;
 }
 
 .color-picker.hidden {
@@ -414,9 +417,29 @@ h2 {
     transition: background-color 0.3s ease;
 }
 
+/* Interactive words on Screen 5 */
+#screen5 #practice-options .word {
+    cursor: pointer;
+    border: 2px dashed transparent;
+    padding: 4px 8px;
+    margin: 0 2px;
+    display: inline-block;
+}
+
+#screen5 #practice-options .word:hover:not(.highlighted) {
+    border-color: var(--primary-purple);
+    background-color: rgba(123, 73, 171, 0.1);
+}
+
+#screen5 #practice-options .word:focus {
+    outline: 3px solid var(--primary-teal);
+    outline-offset: 2px;
+}
+
 .word.highlighted {
-    padding: 2px 6px;
+    padding: 4px 8px;
     border-radius: 4px;
+    border: 2px solid transparent !important;
 }
 
 @keyframes flash {
