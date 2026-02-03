@@ -54,7 +54,8 @@ function initializeApp() {
     document.body.style.color = '#31579B';
 
     // Set initial background swatch as active
-    document.querySelector('.bg-swatch[data-color="#FFF9E6"]').classList.add('active');
+    document.querySelector('.bg-swatch[data-color="#DCEAF6"]').classList.add('active');
+    document.body.style.backgroundColor = '#DCEAF6';
 }
 
 // Screen 4 instruction speaker button
