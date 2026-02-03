@@ -276,6 +276,73 @@ h2 {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
+/* Back Button */
+.back-btn {
+    background-color: var(--primary-teal);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 18px;
+    font-weight: bold;
+    font-family: inherit;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    min-height: 56px;
+    min-width: 120px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.back-btn:hover {
+    background-color: #127a9f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Stop Button */
+.stop-btn {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.stop-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+}
+
+.stop-btn:disabled {
+    background: #999;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Screen 4 Buttons Row */
+.screen4-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    align-items: center;
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-sm) 0;
+}
+
+.screen4-buttons .back-btn,
+.screen4-buttons .next-btn,
+.screen4-buttons .action-btn {
+    min-width: 100px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-height: 48px;
+}
+
+/* Font Color Swatches */
+.font-swatch {
+    border: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.font-swatch.active {
+    border-color: #fff;
+    box-shadow: 0 0 0 3px #333, 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 /* Color Picker - Base Styles */
 .color-picker {
     display: flex;

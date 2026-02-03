@@ -11,6 +11,10 @@ let isSpeaking = false;
 let speechSynthesis = window.speechSynthesis;
 let selectedVoice = null;
 
+// Screen 4 Demo State
+let demoRunning = false;
+let demoStopped = false;
+
 // Screen 5 Practice State
 let selectedPracticeColor = null;
 let selectedPracticeWord = null;
@@ -31,8 +35,11 @@ function initializeApp() {
     // Initialize font selector
     initializeFontSelector();
 
+    // Initialize font color swatches
+    initializeFontColorSwatches();
+
     // Initialize background color swatches
-    initializeColorSwatches();
+    initializeBackgroundColorSwatches();
 
     // Initialize listen buttons
     initializeListenButtons();
@@ -43,8 +50,11 @@ function initializeApp() {
     // Initialize practice color picker (Screen 5)
     initializePracticeColorPicker();
 
+    // Set initial font color (dark blue)
+    document.body.style.color = '#31579B';
+
     // Set initial background swatch as active
-    document.querySelector('.swatch[data-color="#FFF9E6"]').classList.add('active');
+    document.querySelector('.bg-swatch[data-color="#FFF9E6"]').classList.add('active');
 }
 
 // Screen 4 instruction speaker button
@@ -164,15 +174,37 @@ function initializeFontSelector() {
 }
 
 // ============================================
+// Font Color Swatches
+// ============================================
+function initializeFontColorSwatches() {
+    const fontSwatches = document.querySelectorAll('.font-swatch');
+
+    fontSwatches.forEach(swatch => {
+        swatch.addEventListener('click', function() {
+            // Remove active class from all font swatches
+            fontSwatches.forEach(s => s.classList.remove('active'));
+
+            // Add active class to clicked swatch
+            this.classList.add('active');
+
+            // Change font color
+            const color = this.dataset.color;
+            document.body.style.color = color;
+            document.documentElement.style.setProperty('--text-dark', color);
+        });
+    });
+}
+
+// ============================================
 // Background Color Swatches
 // ============================================
-function initializeColorSwatches() {
-    const swatches = document.querySelectorAll('.swatch');
+function initializeBackgroundColorSwatches() {
+    const bgSwatches = document.querySelectorAll('.bg-swatch');
 
-    swatches.forEach(swatch => {
+    bgSwatches.forEach(swatch => {
         swatch.addEventListener('click', function() {
-            // Remove active class from all swatches
-            swatches.forEach(s => s.classList.remove('active'));
+            // Remove active class from all background swatches
+            bgSwatches.forEach(s => s.classList.remove('active'));
 
             // Add active class to clicked swatch
             this.classList.add('active');
@@ -252,8 +284,15 @@ function goToScreen(screenNum) {
 // ============================================
 async function startDemo() {
     const startBtn = document.getElementById('start-demo-btn');
+    const stopBtn = document.getElementById('stop-demo-btn');
+
+    // Set demo state
+    demoRunning = true;
+    demoStopped = false;
+
     startBtn.disabled = true;
     startBtn.textContent = 'Demo in progress...';
+    stopBtn.disabled = false;
 
     // Show color picker
     const colorPicker = document.getElementById('demo-color-picker');
@@ -275,8 +314,15 @@ async function startDemo() {
 
     // Process each color assignment
     for (const assignment of colorAssignments) {
+        if (demoStopped) break;
         await animateColorSelection(assignment.color, assignment.word, assignment.text);
+        if (demoStopped) break;
         await delay(500);
+    }
+
+    if (demoStopped) {
+        endDemo();
+        return;
     }
 
     // Hide cursor
@@ -287,38 +333,67 @@ async function startDemo() {
     resultDiv.classList.remove('hidden');
     resultDiv.innerHTML = '<p>The frequency of occurrence strategy is when the answer appears in more than one of the answers.</p>';
 
-    await speakTextWithPromise('The frequency of occurrence strategy is when the answer appears in more than one of the answers.');
+    if (!demoStopped) {
+        await speakTextWithPromise('The frequency of occurrence strategy is when the answer appears in more than one of the answers.');
+    }
+    if (demoStopped) { endDemo(); return; }
     await delay(500);
 
     // Highlight Spanish occurrences (appears in options a and b)
-    const spanishWords = document.querySelectorAll('#demo-options .word[data-word="Spanish"]');
-    spanishWords.forEach(word => {
-        word.classList.add('flash');
-        setTimeout(() => word.classList.remove('flash'), 1000);
-    });
+    if (!demoStopped) {
+        const spanishWords = document.querySelectorAll('#demo-options .word[data-word="Spanish"]');
+        spanishWords.forEach(word => {
+            word.classList.add('flash');
+            setTimeout(() => word.classList.remove('flash'), 1000);
+        });
+    }
 
+    if (demoStopped) { endDemo(); return; }
     await delay(1200);
 
     // Highlight English occurrences (appears in options b and d)
-    const englishWords = document.querySelectorAll('#demo-options .word[data-word="English"]');
-    englishWords.forEach(word => {
-        word.classList.add('flash');
-        setTimeout(() => word.classList.remove('flash'), 1000);
-    });
+    if (!demoStopped) {
+        const englishWords = document.querySelectorAll('#demo-options .word[data-word="English"]');
+        englishWords.forEach(word => {
+            word.classList.add('flash');
+            setTimeout(() => word.classList.remove('flash'), 1000);
+        });
+    }
 
+    if (demoStopped) { endDemo(); return; }
     await delay(1200);
 
     // Show final answer
-    resultDiv.innerHTML += '<p style="margin-top: 16px;">Using this strategy the answer is b. Spanish and English.</p>';
-
-    await speakTextWithPromise('Using this strategy the answer is b. Spanish and English.');
+    if (!demoStopped) {
+        resultDiv.innerHTML += '<p style="margin-top: 16px;">Using this strategy the answer is b. Spanish and English.</p>';
+        await speakTextWithPromise('Using this strategy the answer is b. Spanish and English.');
+    }
 
     // Check the correct answer
-    document.getElementById('demo-b').checked = true;
+    if (!demoStopped) {
+        document.getElementById('demo-b').checked = true;
+    }
 
-    // Re-enable button
+    endDemo();
+}
+
+function stopDemo() {
+    demoStopped = true;
+    speechSynthesis.cancel();
+    isSpeaking = false;
+}
+
+function endDemo() {
+    const startBtn = document.getElementById('start-demo-btn');
+    const stopBtn = document.getElementById('stop-demo-btn');
+    const cursor = document.getElementById('demo-cursor');
+
+    demoRunning = false;
+    cursor.classList.add('hidden');
+
     startBtn.disabled = false;
     startBtn.textContent = 'Replay the demo';
+    stopBtn.disabled = true;
 }
 
 async function animateColorSelection(color, word, spokenText) {

@@ -21,12 +21,21 @@
             </select>
         </div>
         <div class="control-group">
+            <label>Font Colour:</label>
+            <div class="color-swatches" id="font-color-swatches">
+                <button class="swatch font-swatch active" data-color="#31579B" style="background-color: #31579B;" aria-label="Dark blue font" title="Dark Blue"></button>
+                <button class="swatch font-swatch" data-color="#246678" style="background-color: #246678;" aria-label="Dark teal font" title="Dark Teal"></button>
+                <button class="swatch font-swatch" data-color="#431D5F" style="background-color: #431D5F;" aria-label="Dark purple font" title="Dark Purple"></button>
+                <button class="swatch font-swatch" data-color="#4B4B4B" style="background-color: #4B4B4B;" aria-label="Dark grey font" title="Dark Grey"></button>
+            </div>
+        </div>
+        <div class="control-group">
             <label>Background:</label>
-            <div class="color-swatches">
-                <button class="swatch" data-color="#FFF9E6" style="background-color: #FFF9E6;" aria-label="Cream background" title="Cream"></button>
-                <button class="swatch" data-color="#E6F3FF" style="background-color: #E6F3FF;" aria-label="Light blue background" title="Light Blue"></button>
-                <button class="swatch" data-color="#F0E6FF" style="background-color: #F0E6FF;" aria-label="Light purple background" title="Light Purple"></button>
-                <button class="swatch" data-color="#E6FFE6" style="background-color: #E6FFE6;" aria-label="Light green background" title="Light Green"></button>
+            <div class="color-swatches" id="bg-color-swatches">
+                <button class="swatch bg-swatch" data-color="#FFF9E6" style="background-color: #FFF9E6;" aria-label="Cream background" title="Cream"></button>
+                <button class="swatch bg-swatch" data-color="#E6F3FF" style="background-color: #E6F3FF;" aria-label="Light blue background" title="Light Blue"></button>
+                <button class="swatch bg-swatch" data-color="#F0E6FF" style="background-color: #F0E6FF;" aria-label="Light purple background" title="Light Purple"></button>
+                <button class="swatch bg-swatch" data-color="#E6FFE6" style="background-color: #E6FFE6;" aria-label="Light green background" title="Light Green"></button>
             </div>
         </div>
     </header>
@@ -59,6 +68,7 @@
                 Listen
             </button>
             <div class="nav-buttons">
+                <button class="back-btn" onclick="goToScreen(1)">Back</button>
                 <button class="next-btn" onclick="goToScreen(3)">Next</button>
             </div>
         </section>
@@ -73,6 +83,7 @@
                 Listen
             </button>
             <div class="nav-buttons">
+                <button class="back-btn" onclick="goToScreen(2)">Back</button>
                 <button class="next-btn" onclick="goToScreen(4)">Next</button>
             </div>
         </section>
@@ -132,15 +143,14 @@
                 </button>
             </div>
 
-            <div class="demo-controls">
+            <div class="screen4-buttons">
+                <button class="back-btn" onclick="goToScreen(3)">Back</button>
                 <button id="start-demo-btn" class="action-btn" onclick="startDemo()">Start the demo</button>
+                <button id="stop-demo-btn" class="action-btn stop-btn" onclick="stopDemo()" disabled>Stop</button>
+                <button class="next-btn" onclick="goToScreen(5)">Next</button>
             </div>
 
             <div id="demo-result" class="result-text hidden"></div>
-
-            <div class="nav-buttons">
-                <button class="next-btn" onclick="goToScreen(5)">Next</button>
-            </div>
 
             <!-- Animated cursor for demo -->
             <div id="demo-cursor" class="demo-cursor hidden">
@@ -220,6 +230,10 @@
                 <p>Congratulations on working on a year 12 psychology exam question.</p>
                 <p>Even if you did not know the answer, the strategy worked!</p>
                 <p>Well done!</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="back-btn" onclick="goToScreen(4)">Back</button>
             </div>
         </section>
     </main>
