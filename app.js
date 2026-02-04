@@ -632,7 +632,9 @@ async function checkPracticeAnswers() {
 
     // Process each word
     for (const data of wordData) {
-        const resultText = `There are ${data.count} answers that are coloured ${data.colorName} for ${data.word}.`;
+        const resultText = data.count === 1
+            ? `There is ${data.count} answer that is coloured ${data.colorName} for ${data.word}.`
+            : `There are ${data.count} answers that are coloured ${data.colorName} for ${data.word}.`;
 
         // Add to result div
         const p = document.createElement('p');
