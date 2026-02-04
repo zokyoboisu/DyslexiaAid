@@ -50,10 +50,13 @@
             </p>
             <div class="button-row">
                 <div class="spacer"></div>
-                <button class="listen-btn" data-target="screen1-content" aria-label="Listen to content">
-                    <img src="Speaker40.png" alt="Speaker icon" class="speaker-icon">
-                    Listen
-                </button>
+                <div class="button-center">
+                    <button class="listen-btn" data-target="screen1-content" aria-label="Listen to content">
+                        <img src="Speaker30.png" alt="Speaker icon" class="speaker-icon">
+                        Listen
+                    </button>
+                    <button class="action-btn stop-btn" onclick="stopSpeech()" aria-label="Stop listening">Stop</button>
+                </div>
                 <button class="next-btn" onclick="goToScreen(2)">Next</button>
             </div>
         </section>
@@ -66,10 +69,12 @@
             </p>
             <div class="button-row">
                 <button class="back-btn" onclick="goToScreen(1)">Back</button>
-                <button class="listen-btn" data-target="screen2-content" aria-label="Listen to content">
-                    <img src="Speaker40.png" alt="Speaker icon" class="speaker-icon">
-                    Listen
-                </button>
+                <div class="button-center">
+                    <button class="listen-btn" data-target="screen2-content" aria-label="Listen to content">
+                        <img src="Speaker30.png" alt="Speaker icon" class="speaker-icon">
+                        Listen
+                    </button>
+                </div>
                 <button class="next-btn" onclick="goToScreen(3)">Next</button>
             </div>
         </section>
@@ -81,77 +86,81 @@
             </p>
             <div class="button-row">
                 <button class="back-btn" onclick="goToScreen(2)">Back</button>
-                <button class="listen-btn" data-target="screen3-content" aria-label="Listen to content">
-                    <img src="Speaker40.png" alt="Speaker icon" class="speaker-icon">
-                    Listen
-                </button>
+                <div class="button-center">
+                    <button class="listen-btn" data-target="screen3-content" aria-label="Listen to content">
+                        <img src="Speaker30.png" alt="Speaker icon" class="speaker-icon">
+                        Listen
+                    </button>
+                </div>
                 <button class="next-btn" onclick="goToScreen(4)">Next</button>
             </div>
         </section>
 
         <!-- Screen 4 -->
         <section id="screen4" class="screen">
-            <div id="demo-color-picker" class="color-picker hidden">
-                <span class="picker-label">Colour Picker:</span>
-                <button class="color-btn" data-color="#FF6699" style="background-color: #FF6699;" aria-label="Pink"></button>
-                <button class="color-btn" data-color="#00CC66" style="background-color: #00CC66;" aria-label="Green"></button>
-                <button class="color-btn" data-color="#FFFF00" style="background-color: #FFFF00;" aria-label="Yellow"></button>
-                <button class="color-btn" data-color="#0E6FFE" style="background-color: #0E6FFE;" aria-label="Blue"></button>
-                <button class="color-btn" data-color="#069494" style="background-color: #069494;" aria-label="Teal"></button>
-                <button class="color-btn" data-color="#FF4343" style="background-color: #FF4343;" aria-label="Red"></button>
-            </div>
-
             <p class="instruction-text">Practice multiple choice question 1 with guidance.</p>
 
-            <div class="question-container">
-                <p class="question-text">
-                    Demo Question - What are the major languages spoken in the Caribbean Islands?
-                    <button class="speaker-btn" onclick="speakText('What are the major languages spoken in the Caribbean Islands?')" aria-label="Listen to question">
-                        <img src="Speaker30.png" alt="Speaker icon">
-                    </button>
-                </p>
-
-                <div class="options-container" id="demo-options">
-                    <label class="option">
-                        <input type="checkbox" name="demo-answer" value="a" id="demo-a">
-                        <span class="checkmark"></span>
-                        <span class="option-text">a. <span class="word" data-word="Spanish">Spanish</span> and <span class="word" data-word="Greek">Greek</span></span>
-                    </label>
-                    <label class="option">
-                        <input type="checkbox" name="demo-answer" value="b" id="demo-b">
-                        <span class="checkmark"></span>
-                        <span class="option-text">b. <span class="word" data-word="English">English</span> and <span class="word" data-word="Spanish">Spanish</span></span>
-                    </label>
-                    <label class="option">
-                        <input type="checkbox" name="demo-answer" value="c" id="demo-c">
-                        <span class="checkmark"></span>
-                        <span class="option-text">c. <span class="word" data-word="Chinese">Chinese</span> and <span class="word" data-word="Italian">Italian</span></span>
-                    </label>
-                    <label class="option">
-                        <input type="checkbox" name="demo-answer" value="d" id="demo-d">
-                        <span class="checkmark"></span>
-                        <span class="option-text">d. <span class="word" data-word="Dutch">Dutch</span> and <span class="word" data-word="English">English</span></span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="color-code-instruction">
-                <p class="intro-text">
-                    Colour coding is important for processing information easier and allows those to identity the answer faster. So, let's colour code each language.
-                </p>
-                <button class="speaker-btn inline-speaker" id="screen4-instruction-speaker" aria-label="Listen to instruction">
+            <div class="question-line">
+                <p class="question-text-inline">Demo Question - What are the major languages spoken in the Caribbean Islands?</p>
+                <button class="speaker-btn" onclick="speakText('What are the major languages spoken in the Caribbean Islands?')" aria-label="Listen to question">
                     <img src="Speaker30.png" alt="Speaker icon">
                 </button>
             </div>
 
-            <div class="screen4-buttons">
-                <button class="back-btn" onclick="goToScreen(3)">Back</button>
-                <button id="start-demo-btn" class="action-btn" onclick="startDemo()">Start the demo</button>
-                <button id="stop-demo-btn" class="action-btn stop-btn" onclick="stopDemo()" disabled>Stop</button>
-                <button class="next-btn" onclick="goToScreen(5)">Next</button>
+            <div class="question-line">
+                <p class="instruction-text-inline">Click on Start the Demo for the demonstration</p>
+                <button class="speaker-btn" onclick="speakText('Click on Start the Demo for the demonstration')" aria-label="Listen to instruction">
+                    <img src="Speaker30.png" alt="Speaker icon">
+                </button>
+            </div>
+
+            <div class="question-picker-layout">
+                <div class="question-container">
+                    <div class="options-container" id="demo-options">
+                        <label class="option">
+                            <input type="checkbox" name="demo-answer" value="a" id="demo-a">
+                            <span class="checkmark"></span>
+                            <span class="option-text">a. <span class="word" data-word="Spanish">Spanish</span> and <span class="word" data-word="Greek">Greek</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="demo-answer" value="b" id="demo-b">
+                            <span class="checkmark"></span>
+                            <span class="option-text">b. <span class="word" data-word="English">English</span> and <span class="word" data-word="Spanish">Spanish</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="demo-answer" value="c" id="demo-c">
+                            <span class="checkmark"></span>
+                            <span class="option-text">c. <span class="word" data-word="Chinese">Chinese</span> and <span class="word" data-word="Italian">Italian</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="demo-answer" value="d" id="demo-d">
+                            <span class="checkmark"></span>
+                            <span class="option-text">d. <span class="word" data-word="Dutch">Dutch</span> and <span class="word" data-word="English">English</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="demo-color-picker" class="vertical-color-picker">
+                    <button class="color-btn" data-color="#f5d3ed" style="background-color: #f5d3ed;" aria-label="Pink"></button>
+                    <button class="color-btn" data-color="#dcf5d3" style="background-color: #dcf5d3;" aria-label="Green"></button>
+                    <button class="color-btn" data-color="#f6f7b9" style="background-color: #f6f7b9;" aria-label="Yellow"></button>
+                    <button class="color-btn" data-color="#c5c5c5" style="background-color: #c5c5c5;" aria-label="Grey"></button>
+                    <button class="color-btn" data-color="#cee6ff" style="background-color: #cee6ff;" aria-label="Blue"></button>
+                    <button class="color-btn" data-color="#9abecc" style="background-color: #9abecc;" aria-label="Teal"></button>
+                    <button class="color-btn" data-color="#f9a2a2" style="background-color: #f9a2a2;" aria-label="Red"></button>
+                </div>
             </div>
 
             <div id="demo-result" class="result-text hidden"></div>
+
+            <div class="screen4-buttons">
+                <button class="back-btn" onclick="goToScreen(3)">Back</button>
+                <div class="button-center">
+                    <button id="start-demo-btn" class="action-btn" onclick="startDemo()">Start the demo</button>
+                    <button id="stop-demo-btn" class="action-btn stop-btn" onclick="stopDemo()" disabled>Stop</button>
+                </div>
+                <button class="next-btn" onclick="goToScreen(5)">Next</button>
+            </div>
 
             <!-- Animated cursor for demo -->
             <div id="demo-cursor" class="demo-cursor hidden">
@@ -163,16 +172,7 @@
 
         <!-- Screen 5 -->
         <section id="screen5" class="screen">
-            <div id="practice-color-picker" class="color-picker">
-                <span class="picker-label">Colour Picker:</span>
-                <button class="color-btn practice-color" data-color="#FF6699" data-word="Id" style="background-color: #FF6699;" aria-label="Pink for Id"></button>
-                <button class="color-btn practice-color" data-color="#00CC66" data-word="Ego" style="background-color: #00CC66;" aria-label="Green for Ego"></button>
-                <button class="color-btn practice-color" data-color="#FFFF00" data-word="Conscious" style="background-color: #FFFF00;" aria-label="Yellow for Conscious"></button>
-                <button class="color-btn practice-color" data-color="#808080" data-word="Unconscious" style="background-color: #808080;" aria-label="Grey for Unconscious"></button>
-                <button class="color-btn practice-color" data-color="#0E6FFE" data-word="Aware" style="background-color: #0E6FFE;" aria-label="Blue for Aware"></button>
-                <button class="color-btn practice-color" data-color="#069494" data-word="Brain" style="background-color: #069494;" aria-label="Teal for Brain"></button>
-                <button class="color-btn practice-color" data-color="#FF4343" data-word="Superego" style="background-color: #FF4343;" aria-label="Red for Superego"></button>
-            </div>
+            <p class="intro-text">Time to have a go. Listen and read the question. Then highlight the answer, even if you may not know the answer.</p>
 
             <p class="screen5-title">Practice question for student:</p>
 
@@ -184,34 +184,46 @@
             </div>
 
             <div class="question-line">
-                <p class="instruction-text-inline">Instructions: Colour code the answers using the clicker. Click on a colour to start coding.</p>
-                <button class="speaker-btn" onclick="speakText('Instructions: Colour code the answers using the clicker. Click on a colour to start coding.')" aria-label="Listen to instructions">
+                <p class="instruction-text-inline">Instructions: Colour code the answers using the picker. Click on a colour to start coding.</p>
+                <button class="speaker-btn" onclick="speakText('Instructions: Colour code the answers using the picker. Click on a colour to start coding.')" aria-label="Listen to instructions">
                     <img src="Speaker30.png" alt="Speaker icon">
                 </button>
             </div>
 
-            <div class="question-container">
-                <div class="options-container" id="practice-options">
-                    <label class="option">
-                        <input type="checkbox" name="practice-answer" value="a" id="practice-a">
-                        <span class="checkmark"></span>
-                        <span class="option-text">a. <span class="word" data-word="Id">Id</span>, <span class="word" data-word="Ego">Ego</span>, and <span class="word" data-word="Conscious">Conscious</span></span>
-                    </label>
-                    <label class="option">
-                        <input type="checkbox" name="practice-answer" value="b" id="practice-b">
-                        <span class="checkmark"></span>
-                        <span class="option-text">b. <span class="word" data-word="Unconscious">Unconscious</span>, <span class="word" data-word="Id">Id</span>, and <span class="word" data-word="Aware">Aware</span></span>
-                    </label>
-                    <label class="option">
-                        <input type="checkbox" name="practice-answer" value="c" id="practice-c">
-                        <span class="checkmark"></span>
-                        <span class="option-text">c. <span class="word" data-word="Superego">Superego</span>, <span class="word" data-word="Ego">Ego</span> and <span class="word" data-word="Brain">Brain</span></span>
-                    </label>
-                    <label class="option">
-                        <input type="checkbox" name="practice-answer" value="d" id="practice-d">
-                        <span class="checkmark"></span>
-                        <span class="option-text">d. <span class="word" data-word="Ego">Ego</span>, <span class="word" data-word="Superego">Superego</span> and <span class="word" data-word="Id">Id</span></span>
-                    </label>
+            <div class="question-picker-layout">
+                <div class="question-container">
+                    <div class="options-container" id="practice-options">
+                        <label class="option">
+                            <input type="checkbox" name="practice-answer" value="a" id="practice-a">
+                            <span class="checkmark"></span>
+                            <span class="option-text">a. <span class="word" data-word="Id">Id</span>, <span class="word" data-word="Ego">Ego</span>, and <span class="word" data-word="Conscious">Conscious</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="practice-answer" value="b" id="practice-b">
+                            <span class="checkmark"></span>
+                            <span class="option-text">b. <span class="word" data-word="Unconscious">Unconscious</span>, <span class="word" data-word="Id">Id</span>, and <span class="word" data-word="Aware">Aware</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="practice-answer" value="c" id="practice-c">
+                            <span class="checkmark"></span>
+                            <span class="option-text">c. <span class="word" data-word="Superego">Superego</span>, <span class="word" data-word="Ego">Ego</span> and <span class="word" data-word="Brain">Brain</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="practice-answer" value="d" id="practice-d">
+                            <span class="checkmark"></span>
+                            <span class="option-text">d. <span class="word" data-word="Ego">Ego</span>, <span class="word" data-word="Superego">Superego</span> and <span class="word" data-word="Id">Id</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="practice-color-picker" class="vertical-color-picker">
+                    <button class="color-btn practice-color" data-color="#f5d3ed" data-word="Id" style="background-color: #f5d3ed;" aria-label="Pink for Id"></button>
+                    <button class="color-btn practice-color" data-color="#dcf5d3" data-word="Ego" style="background-color: #dcf5d3;" aria-label="Green for Ego"></button>
+                    <button class="color-btn practice-color" data-color="#f6f7b9" data-word="Conscious" style="background-color: #f6f7b9;" aria-label="Yellow for Conscious"></button>
+                    <button class="color-btn practice-color" data-color="#c5c5c5" data-word="Unconscious" style="background-color: #c5c5c5;" aria-label="Grey for Unconscious"></button>
+                    <button class="color-btn practice-color" data-color="#cee6ff" data-word="Aware" style="background-color: #cee6ff;" aria-label="Blue for Aware"></button>
+                    <button class="color-btn practice-color" data-color="#9abecc" data-word="Brain" style="background-color: #9abecc;" aria-label="Teal for Brain"></button>
+                    <button class="color-btn practice-color" data-color="#f9a2a2" data-word="Superego" style="background-color: #f9a2a2;" aria-label="Red for Superego"></button>
                 </div>
             </div>
 
