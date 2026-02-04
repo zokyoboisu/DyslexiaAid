@@ -60,10 +60,10 @@ body {
     top: 0;
     z-index: 1000;
     background: linear-gradient(135deg, var(--primary-blue), var(--primary-teal));
-    padding: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -72,50 +72,50 @@ body {
 .control-group {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     background: rgba(255, 255, 255, 0.95);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius);
+    padding: 4px 8px;
+    border-radius: 8px;
 }
 
 .control-group label {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-dark);
     white-space: nowrap;
 }
 
 #font-select {
     font-family: inherit;
-    font-size: 14px;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border: 2px solid var(--primary-purple);
-    border-radius: 8px;
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid var(--primary-purple);
+    border-radius: 6px;
     background: white;
     color: var(--text-dark);
     cursor: pointer;
-    min-width: 160px;
-    min-height: 44px;
+    min-width: 130px;
+    min-height: 28px;
 }
 
 #font-select:focus {
-    outline: 3px solid var(--primary-teal);
-    outline-offset: 2px;
+    outline: 2px solid var(--primary-teal);
+    outline-offset: 1px;
 }
 
 .color-swatches {
     display: flex;
-    gap: var(--spacing-xs);
+    gap: 4px;
 }
 
 .swatch {
-    width: 44px;
-    height: 44px;
-    border: 3px solid transparent;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border: 2px solid transparent;
+    border-radius: 6px;
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .swatch:hover,
@@ -831,19 +831,19 @@ h2 {
     }
 
     .controls-bar {
-        padding: var(--spacing-sm);
-        gap: var(--spacing-sm);
+        padding: var(--spacing-xs);
+        gap: var(--spacing-xs);
     }
 
     .control-group {
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: 4px 6px;
         width: 100%;
         justify-content: center;
     }
 
     #font-select {
         flex: 1;
-        max-width: 200px;
+        max-width: 150px;
     }
 
     .color-swatches {
@@ -882,8 +882,8 @@ h2 {
     }
 
     .swatch {
-        width: 36px;
-        height: 36px;
+        width: 24px;
+        height: 24px;
     }
 
     .listen-btn,
@@ -1028,6 +1028,12 @@ h2 {
 }
 
 /* Screen 5 specific compact styles */
+#screen5 .intro-text {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
 #screen5 .screen5-title {
     margin-bottom: var(--spacing-xs);
 }
