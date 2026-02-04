@@ -44,9 +44,6 @@ function initializeApp() {
     // Initialize listen buttons
     initializeListenButtons();
 
-    // Initialize Screen 4 instruction speaker button
-    initializeScreen4InstructionSpeaker();
-
     // Initialize practice color picker (Screen 5)
     initializePracticeColorPicker();
 
@@ -56,16 +53,6 @@ function initializeApp() {
     // Set initial background swatch as active
     document.querySelector('.bg-swatch[data-color="#DCEAF6"]').classList.add('active');
     document.body.style.backgroundColor = '#DCEAF6';
-}
-
-// Screen 4 instruction speaker button
-function initializeScreen4InstructionSpeaker() {
-    const btn = document.getElementById('screen4-instruction-speaker');
-    if (btn) {
-        btn.addEventListener('click', function() {
-            speakText("Colour coding is important for processing information easier and allows those to identity the answer faster. So, let's colour code each language.");
-        });
-    }
 }
 
 // ============================================
@@ -83,26 +70,30 @@ function initializeVoice() {
 function selectAustralianVoice() {
     const voices = speechSynthesis.getVoices();
 
-    // Priority list for Australian female voices
-    // Looking for en-AU voices first, preferring female voices
+    // Log all available voices for debugging
+    console.log('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+
+    // Priority list for Australian female voices, with British as fallback
     const priorityChecks = [
-        // Google/Cloud voices (Neural2-A is female Australian)
-        v => v.name.includes('en-AU') && v.name.includes('Neural2-A'),
-        v => v.name.includes('en-AU') && v.name.toLowerCase().includes('female'),
-        v => v.name.includes('en-AU-Wavenet') && v.name.includes('-A'),
-        v => v.name.includes('en-AU-Wavenet') && v.name.includes('-C'),
-        // Microsoft voices
-        v => v.name.includes('Catherine') || v.name.includes('Natasha'),
-        // Any Australian voice
+        // Microsoft Windows Australian female voices (Natural/Online voices)
+        v => v.name.toLowerCase().includes('natasha') && v.name.toLowerCase().includes('australia'),
+        v => v.name.toLowerCase().includes('natasha'),
+        // Microsoft Catherine (older Australian voice)
+        v => v.name.toLowerCase().includes('catherine') && v.name.toLowerCase().includes('australia'),
+        // Any voice with en-AU language code
         v => v.lang === 'en-AU',
+        // Any voice mentioning Australia
         v => v.name.toLowerCase().includes('australia'),
-        // Female English voices as fallback
-        v => v.name.toLowerCase().includes('karen'),
-        v => v.name.toLowerCase().includes('samantha'),
-        v => v.name.toLowerCase().includes('victoria'),
-        v => v.name.toLowerCase().includes('female') && v.lang.startsWith('en'),
-        // Any English voice
+        // Google/Cloud voices
+        v => v.name.includes('en-AU'),
+        // British female voices as fallback (closer to Australian accent)
+        v => v.name.toLowerCase().includes('hazel') && v.lang === 'en-GB',
+        v => v.name.toLowerCase().includes('libby'),
+        v => v.name.toLowerCase().includes('sonia'),
         v => v.lang === 'en-GB',
+        // US female voices as last resort
+        v => v.name.toLowerCase().includes('zira'),
+        v => v.name.toLowerCase().includes('samantha'),
         v => v.lang === 'en-US',
         v => v.lang.startsWith('en')
     ];
@@ -149,7 +140,10 @@ function speakText(text, callback) {
     };
 
     utterance.onerror = function(event) {
-        console.error('Speech error:', event);
+        // Ignore 'interrupted' error - this happens when speech is intentionally stopped
+        if (event.error !== 'interrupted') {
+            console.error('Speech error:', event);
+        }
         isSpeaking = false;
         if (callback) callback();
     };
@@ -264,6 +258,9 @@ function initializeListenButtons() {
 // Screen Navigation
 // ============================================
 function goToScreen(screenNum) {
+    // Stop any ongoing speech when navigating
+    stopSpeech();
+
     // Hide all screens
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -281,6 +278,14 @@ function goToScreen(screenNum) {
 }
 
 // ============================================
+// Stop Speech
+// ============================================
+function stopSpeech() {
+    speechSynthesis.cancel();
+    isSpeaking = false;
+}
+
+// ============================================
 // Screen 4 - Demo Animation
 // ============================================
 async function startDemo() {
@@ -295,6 +300,19 @@ async function startDemo() {
     startBtn.textContent = 'Demo in progress...';
     stopBtn.disabled = false;
 
+    // Clear any previous highlights (for replay)
+    const allWords = document.querySelectorAll('#demo-options .word');
+    allWords.forEach(word => {
+        word.style.backgroundColor = '';
+        word.classList.remove('highlighted', 'flash');
+    });
+
+    // Clear previous result and uncheck answers
+    const resultDiv = document.getElementById('demo-result');
+    resultDiv.classList.add('hidden');
+    resultDiv.innerHTML = '';
+    document.querySelectorAll('input[name="demo-answer"]').forEach(cb => cb.checked = false);
+
     // Show color picker
     const colorPicker = document.getElementById('demo-color-picker');
     colorPicker.classList.remove('hidden');
@@ -303,14 +321,14 @@ async function startDemo() {
     const cursor = document.getElementById('demo-cursor');
     cursor.classList.remove('hidden');
 
-    // Color assignments
+    // Color assignments (using new pastel colors)
     const colorAssignments = [
-        { color: '#FF6699', word: 'Spanish', text: 'Let\'s choose the colour pink for Spanish' },
-        { color: '#00CC66', word: 'Greek', text: 'Let\'s choose the colour green for Greek' },
-        { color: '#FFFF00', word: 'English', text: 'Let\'s choose the colour yellow for English' },
-        { color: '#0E6FFE', word: 'Chinese', text: 'Let\'s choose the colour blue for Chinese' },
-        { color: '#069494', word: 'Dutch', text: 'Let\'s choose the colour teal for Dutch' },
-        { color: '#FF4343', word: 'Italian', text: 'Let\'s choose the colour red for Italian' }
+        { color: '#f5d3ed', word: 'Spanish', text: 'Let\'s choose the colour pink for Spanish' },
+        { color: '#dcf5d3', word: 'Greek', text: 'Let\'s choose the colour green for Greek' },
+        { color: '#f6f7b9', word: 'English', text: 'Let\'s choose the colour yellow for English' },
+        { color: '#cee6ff', word: 'Chinese', text: 'Let\'s choose the colour blue for Chinese' },
+        { color: '#9abecc', word: 'Dutch', text: 'Let\'s choose the colour teal for Dutch' },
+        { color: '#f9a2a2', word: 'Italian', text: 'Let\'s choose the colour red for Italian' }
     ];
 
     // Process each color assignment
@@ -330,7 +348,6 @@ async function startDemo() {
     cursor.classList.add('hidden');
 
     // Show frequency explanation
-    const resultDiv = document.getElementById('demo-result');
     resultDiv.classList.remove('hidden');
     resultDiv.innerHTML = '<p>The frequency of occurrence strategy is when the answer appears in more than one of the answers.</p>';
 
@@ -583,13 +600,13 @@ function initializePracticeColorPicker() {
 
 function getColorName(hex) {
     const colorNames = {
-        '#FF6699': 'pink',
-        '#00CC66': 'green',
-        '#FFFF00': 'yellow',
-        '#808080': 'grey',
-        '#0E6FFE': 'blue',
-        '#069494': 'teal',
-        '#FF4343': 'red'
+        '#f5d3ed': 'pink',
+        '#dcf5d3': 'green',
+        '#f6f7b9': 'yellow',
+        '#c5c5c5': 'grey',
+        '#cee6ff': 'blue',
+        '#9abecc': 'teal',
+        '#f9a2a2': 'red'
     };
     return colorNames[hex] || 'this colour';
 }
@@ -602,15 +619,15 @@ async function checkPracticeAnswers() {
     resultDiv.classList.remove('hidden');
     resultDiv.innerHTML = '';
 
-    // Word data: word name, count, color, color name
+    // Word data: word name, count, color, color name (using new pastel colors)
     const wordData = [
-        { word: 'Id', count: 3, color: '#FF6699', colorName: 'pink' },
-        { word: 'Ego', count: 3, color: '#00CC66', colorName: 'green' },
-        { word: 'Superego', count: 2, color: '#FF4343', colorName: 'red' },
-        { word: 'Conscious', count: 1, color: '#FFFF00', colorName: 'yellow' },
-        { word: 'Unconscious', count: 1, color: '#808080', colorName: 'grey' },
-        { word: 'Aware', count: 1, color: '#0E6FFE', colorName: 'blue' },
-        { word: 'Brain', count: 1, color: '#069494', colorName: 'teal' }
+        { word: 'Id', count: 3, color: '#f5d3ed', colorName: 'pink' },
+        { word: 'Ego', count: 3, color: '#dcf5d3', colorName: 'green' },
+        { word: 'Superego', count: 2, color: '#f9a2a2', colorName: 'red' },
+        { word: 'Conscious', count: 1, color: '#f6f7b9', colorName: 'yellow' },
+        { word: 'Unconscious', count: 1, color: '#c5c5c5', colorName: 'grey' },
+        { word: 'Aware', count: 1, color: '#cee6ff', colorName: 'blue' },
+        { word: 'Brain', count: 1, color: '#9abecc', colorName: 'teal' }
     ];
 
     // Process each word

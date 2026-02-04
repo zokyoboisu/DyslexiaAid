@@ -160,7 +160,7 @@ body {
 /* Typography */
 h2 {
     font-size: 1.75rem;
-    color: var(--primary-purple);
+    color: inherit;
     margin-bottom: var(--spacing-lg);
     line-height: 1.4;
     padding-bottom: var(--spacing-sm);
@@ -179,17 +179,18 @@ h2 {
     border-left: 5px solid var(--primary-blue);
 }
 
-/* Listen Button - Light blue with black text */
+/* Listen Button - Light blue with black bold uppercase text */
 .listen-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    background-color: #9fc0ec;
+    gap: var(--spacing-xs);
+    background-color: #cee6ff;
     color: #000000;
-    border: none;
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: 18px;
+    border: 1px solid #b3b3b3;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
     font-weight: bold;
+    text-transform: uppercase;
     font-family: inherit;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -199,7 +200,7 @@ h2 {
 }
 
 .listen-btn:hover:not(:disabled) {
-    background-color: #7aa8de;
+    background-color: #b8d9ff;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
@@ -212,8 +213,8 @@ h2 {
 }
 
 .listen-btn .speaker-icon {
-    width: 28px;
-    height: 28px;
+    width: 25px;
+    height: 25px;
 }
 
 /* Speaker Button (inline) */
@@ -238,8 +239,8 @@ h2 {
 }
 
 .speaker-btn img {
-    width: 32px;
-    height: 32px;
+    width: 25px;
+    height: 25px;
 }
 
 .inline-speaker {
@@ -250,9 +251,7 @@ h2 {
 .nav-buttons {
     display: flex;
     justify-content: flex-start;
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-lg);
-    border-top: 2px dashed var(--primary-teal);
+    margin-top: var(--spacing-lg);
     gap: var(--spacing-sm);
 }
 
@@ -260,72 +259,103 @@ h2 {
 .button-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-lg);
-    border-top: 2px dashed var(--primary-teal);
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
     flex-wrap: wrap;
 }
 
-.button-row .spacer {
-    min-width: 120px;
+/* Position Back button to the left */
+.button-row .back-btn {
+    margin-right: auto;
 }
 
-/* Next Button - Dark Purple with white text */
+/* Position Next button to the right */
+.button-row .next-btn {
+    margin-left: auto;
+}
+
+/* Spacer for screens without Back button */
+.button-row .spacer {
+    margin-right: auto;
+}
+
+/* Ensure consistent button sizing in button-row */
+.button-row .listen-btn,
+.button-row .action-btn,
+.button-row .back-btn,
+.button-row .next-btn {
+    min-width: 100px;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Center section for Listen button */
+.button-row .button-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+
+/* Next Button - Light purple with black bold uppercase text */
 .next-btn {
-    background-color: #431D5F;
-    color: white;
-    border: none;
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: 18px;
+    background-color: #e2c4ff;
+    color: #000000;
+    border: 1px solid #b3b3b3;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
     font-weight: bold;
+    text-transform: uppercase;
     font-family: inherit;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
     min-height: 36px;
-    min-width: 120px;
+    min-width: 100px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .next-btn:hover {
-    background-color: #321547;
+    background-color: #d4b0f7;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Back Button - Dark Purple with white text (same as Next) */
+/* Back Button - Light purple with black bold uppercase text (same as Next) */
 .back-btn {
-    background-color: #431D5F;
-    color: white;
-    border: none;
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: 18px;
+    background-color: #e2c4ff;
+    color: #000000;
+    border: 1px solid #b3b3b3;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
     font-weight: bold;
+    text-transform: uppercase;
     font-family: inherit;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
     min-height: 36px;
-    min-width: 120px;
+    min-width: 100px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .back-btn:hover {
-    background-color: #321547;
+    background-color: #d4b0f7;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Stop Button - Light purple */
+/* Stop Button - Light blue with black bold uppercase text */
 .stop-btn {
-    background-color: #c5a9fc;
+    background-color: #cee6ff;
     color: #000000;
+    border: 1px solid #b3b3b3;
+    text-transform: uppercase;
 }
 
 .stop-btn:hover:not(:disabled) {
-    background-color: #b494f7;
+    background-color: #b8d9ff;
 }
 
 .stop-btn:disabled {
@@ -339,10 +369,18 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm);
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin: var(--spacing-md) 0;
     padding: var(--spacing-sm) 0;
+}
+
+/* Center section for Start/Stop buttons on Screen 4 */
+.screen4-buttons .button-center {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    flex: 1;
 }
 
 .screen4-buttons .back-btn,
@@ -351,6 +389,11 @@ h2 {
     min-width: 100px;
     padding: var(--spacing-sm) var(--spacing-md);
     min-height: 36px;
+}
+
+/* Remove default margin from action buttons in screen4-buttons */
+.screen4-buttons .action-btn {
+    margin: 0;
 }
 
 /* Font Color Swatches */
@@ -363,7 +406,7 @@ h2 {
     box-shadow: 0 0 0 3px #333, 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Color Picker - Base Styles */
+/* Color Picker - Base Styles (horizontal - legacy) */
 .color-picker {
     display: flex;
     align-items: center;
@@ -375,13 +418,6 @@ h2 {
     margin-bottom: var(--spacing-lg);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--primary-teal);
-}
-
-/* Screen 5 Color Picker - Floating/Sticky */
-#practice-color-picker {
-    position: sticky;
-    top: 80px; /* Below the controls bar */
-    z-index: 100;
 }
 
 .color-picker.hidden {
@@ -418,6 +454,76 @@ h2 {
     opacity: 0.4;
     cursor: not-allowed;
     transform: none;
+}
+
+/* Question and Color Picker Side-by-Side Layout */
+.question-picker-layout {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: stretch;
+    margin-bottom: var(--spacing-sm);
+}
+
+.question-picker-layout .question-container {
+    flex: 1;
+    max-width: 80%;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.question-picker-layout .options-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Vertical Color Picker */
+.vertical-color-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: white;
+    border-radius: 25px;
+    border: 2px solid #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.vertical-color-picker .color-btn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.vertical-color-picker .color-btn:hover {
+    transform: scale(1.1);
+}
+
+.vertical-color-picker .color-btn.selected {
+    border-color: var(--text-dark);
+    box-shadow: 0 0 0 3px var(--primary-teal);
+}
+
+/* Responsive adjustments for side-by-side layout */
+@media (max-width: 768px) {
+    .question-picker-layout {
+        flex-direction: column;
+    }
+
+    .question-picker-layout .question-container {
+        max-width: 100%;
+    }
+
+    .vertical-color-picker {
+        flex-direction: row;
+        border-radius: var(--border-radius);
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Question Container */
@@ -547,14 +653,15 @@ h2 {
 }
 
 /* Action Button */
-/* Action Button - Light blue with black text */
+/* Action Button - Light blue with black bold uppercase text */
 .action-btn {
-    background-color: #9fc0ec;
+    background-color: #cee6ff;
     color: #000000;
-    border: none;
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: 18px;
+    border: 1px solid #b3b3b3;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
     font-weight: bold;
+    text-transform: uppercase;
     font-family: inherit;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -562,11 +669,11 @@ h2 {
     min-height: 36px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: block;
-    margin: var(--spacing-lg) auto;
+    margin: var(--spacing-md) auto;
 }
 
 .action-btn:hover:not(:disabled) {
-    background-color: #7aa8de;
+    background-color: #b8d9ff;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
@@ -604,22 +711,22 @@ h2 {
 .screen5-title {
     font-size: 16px;
     font-weight: bold;
-    color: var(--primary-purple);
-    margin-bottom: var(--spacing-md);
+    color: inherit;
+    margin-bottom: var(--spacing-xs);
 }
 
 .question-line {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
     flex-wrap: wrap;
 }
 
 .question-text-inline {
     font-size: 16px;
     font-weight: bold;
-    color: var(--primary-blue);
+    color: inherit;
     margin: 0;
     flex: 1;
     min-width: 250px;
@@ -628,7 +735,7 @@ h2 {
 .instruction-text-inline {
     font-size: 16px;
     font-weight: bold;
-    color: var(--primary-purple);
+    color: inherit;
     margin: 0;
     flex: 1;
     min-width: 250px;
@@ -687,13 +794,13 @@ h2 {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: var(--spacing-sm);
-    color: #155724;
+    color: inherit;
 }
 
 .congrats-box p:last-child {
     margin-bottom: 0;
     font-size: 24px;
-    color: var(--primary-purple);
+    color: inherit;
 }
 
 /* Demo Cursor */
@@ -847,8 +954,8 @@ h2 {
 /* Reduce instruction text spacing */
 #screen4 .instruction-text,
 #screen5 .instruction-text {
-    margin-bottom: var(--spacing-sm);
-    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
 }
 
 /* Compact question container */
@@ -889,12 +996,9 @@ h2 {
     font-size: 16px;
 }
 
-/* Compact color code instruction */
-#screen4 .color-code-instruction {
-    margin-bottom: var(--spacing-sm);
-}
-
-#screen4 .color-code-instruction .intro-text {
+/* Question picker layout adjustments for Screen 4 and 5 */
+#screen4 .question-picker-layout .question-container,
+#screen5 .question-picker-layout .question-container {
     padding: var(--spacing-sm);
     margin-bottom: 0;
 }
@@ -916,6 +1020,11 @@ h2 {
 #screen5 .nav-buttons {
     margin-top: var(--spacing-md);
     padding-top: var(--spacing-sm);
+}
+
+/* Screen 4 specific compact styles */
+#screen4 .question-line {
+    margin-bottom: var(--spacing-xs);
 }
 
 /* Screen 5 specific compact styles */
