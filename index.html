@@ -247,6 +247,81 @@
 
             <div class="nav-buttons">
                 <button class="back-btn" onclick="goToScreen(4)">Back</button>
+                <button class="next-btn" onclick="goToScreen(6)">Next</button>
+            </div>
+        </section>
+
+        <!-- Screen 6 -->
+        <section id="screen6" class="screen">
+            <p class="instruction-text">Please attempt the following questions.</p>
+
+            <div class="question-line">
+                <p class="question-text-inline">Question: Which are the two planets closest to Earth?</p>
+                <button class="speaker-btn" onclick="speakText('Question: Which are the two planets closest to Earth?')" aria-label="Listen to question">
+                    <img src="Speaker30.png" alt="Speaker icon">
+                </button>
+            </div>
+
+            <div class="question-line">
+                <p class="instruction-text-inline">Instructions: Colour code the answers using the colour picker. Click on a colour to start coding. After you're done, tick the correct answer.</p>
+                <button class="speaker-btn" onclick="speakText('Instructions: Colour code the answers using the colour picker. Click on a colour to start coding. After you\'re done, tick the correct answer.')" aria-label="Listen to instructions">
+                    <img src="Speaker30.png" alt="Speaker icon">
+                </button>
+            </div>
+
+            <div class="question-picker-layout">
+                <div class="question-container">
+                    <div class="options-container" id="screen6-options">
+                        <label class="option">
+                            <input type="checkbox" name="screen6-answer" value="a" id="screen6-a">
+                            <span class="checkmark"></span>
+                            <span class="option-text">a. <span class="word s6-word" data-word="Mercury">Mercury</span>, <span class="word s6-word" data-word="Jupiter">Jupiter</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="screen6-answer" value="b" id="screen6-b">
+                            <span class="checkmark"></span>
+                            <span class="option-text">b. <span class="word s6-word" data-word="Venus">Venus</span>, <span class="word s6-word" data-word="Saturn">Saturn</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="screen6-answer" value="c" id="screen6-c">
+                            <span class="checkmark"></span>
+                            <span class="option-text">c. <span class="word s6-word" data-word="Mercury">Mercury</span>, <span class="word s6-word" data-word="Venus">Venus</span></span>
+                        </label>
+                        <label class="option">
+                            <input type="checkbox" name="screen6-answer" value="d" id="screen6-d">
+                            <span class="checkmark"></span>
+                            <span class="option-text">d. <span class="word s6-word" data-word="Mars">Mars</span>, <span class="word s6-word" data-word="Pluto">Pluto</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="screen6-color-picker" class="vertical-color-picker">
+                    <button class="color-btn s6-color" data-color="#f5d3ed" style="background-color: #f5d3ed;" aria-label="Pink"></button>
+                    <button class="color-btn s6-color" data-color="#dcf5d3" style="background-color: #dcf5d3;" aria-label="Green"></button>
+                    <button class="color-btn s6-color" data-color="#f6f7b9" style="background-color: #f6f7b9;" aria-label="Yellow"></button>
+                    <button class="color-btn s6-color" data-color="#cee6ff" style="background-color: #cee6ff;" aria-label="Blue"></button>
+                    <button class="color-btn s6-color" data-color="#f9a2a2" style="background-color: #f9a2a2;" aria-label="Red"></button>
+                    <button class="color-btn s6-color" data-color="#9abecc" style="background-color: #9abecc;" aria-label="Teal"></button>
+                    <button class="color-btn s6-eraser" id="screen6-eraser" aria-label="Eraser">
+                        <img src="eraser60.png" alt="Eraser" class="eraser-icon">
+                    </button>
+                </div>
+            </div>
+
+            <button id="screen6-check-btn" class="action-btn hidden" onclick="checkScreen6Answer()">Check your answer</button>
+
+            <div id="screen6-result" class="result-text hidden"></div>
+
+            <div class="nav-buttons">
+                <button class="back-btn" onclick="goToScreen(5)">Back</button>
+            </div>
+
+            <!-- Floating Modal for messages -->
+            <div id="screen6-modal" class="modal-overlay" onclick="closeScreen6Modal(event)">
+                <div class="modal-content" id="screen6-modal-content">
+                    <p id="screen6-modal-text"></p>
+                    <button class="modal-close-btn" onclick="closeScreen6Modal()">OK</button>
+                </div>
             </div>
         </section>
     </main>

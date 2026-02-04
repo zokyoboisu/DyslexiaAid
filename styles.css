@@ -1064,6 +1064,10 @@ h2 {
     font-size: 20px;
 }
 
+#screen5 .nav-buttons {
+    justify-content: space-between;
+}
+
 /* Disabled checkboxes on Screen 5 during highlighting phase */
 #screen5 .option:has(input[type="checkbox"]:disabled) {
     cursor: not-allowed;
@@ -1078,4 +1082,200 @@ h2 {
 #screen5 .option:has(input[type="checkbox"]:disabled):hover {
     background: #f8f9fa;
     border-color: transparent;
+}
+
+/* ============================================
+   Screen 6 Styles
+   ============================================ */
+
+#screen6 {
+    line-height: 1.5;
+}
+
+/* Eraser button in color picker */
+.s6-eraser {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #808080 !important;
+    border-radius: 50%;
+    background: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+
+.s6-eraser .eraser-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.s6-eraser:hover {
+    transform: scale(1.1);
+    border-color: #333 !important;
+}
+
+.s6-eraser.selected {
+    border-color: var(--text-dark) !important;
+    box-shadow: 0 0 0 3px var(--primary-teal);
+}
+
+/* Screen 6 words - interactive */
+#screen6 #screen6-options .word {
+    cursor: pointer;
+    border: 2px dashed transparent;
+    padding: 4px 8px;
+    margin: 0 2px;
+    display: inline-block;
+}
+
+#screen6 #screen6-options .word:hover:not(.highlighted) {
+    border-color: var(--primary-purple);
+    background-color: rgba(123, 73, 171, 0.1);
+}
+
+#screen6 #screen6-options .word:focus {
+    outline: 3px solid var(--primary-teal);
+    outline-offset: 2px;
+}
+
+/* Floating Modal Info Box for Screen 6 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.visible .modal-content {
+    transform: scale(1);
+}
+
+.modal-content p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.modal-content.success {
+    border-top: 5px solid #28a745;
+}
+
+.modal-content.error {
+    border-top: 5px solid #dc3545;
+}
+
+.modal-content.warning {
+    border-top: 5px solid #ffc107;
+}
+
+.modal-close-btn {
+    background-color: #9b59b6;
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: inherit;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+    background-color: #8e44ad;
+}
+
+/* Screen 6 buttons - light blue with black bold text and grey border */
+#screen6 .action-btn {
+    background-color: #cee6ff !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    border: 1px solid #4d4d4d !important;
+    border-radius: var(--border-radius) !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    font-size: 16px;
+    display: block;
+    margin: var(--spacing-md) auto;
+}
+
+#screen6 .action-btn:hover:not(:disabled) {
+    background-color: #b8d9ff !important;
+    transform: translateY(-2px);
+}
+
+/* Screen 6 compact spacing */
+#screen6 .instruction-text {
+    margin-bottom: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+#screen6 .question-line {
+    margin-bottom: var(--spacing-xs);
+}
+
+#screen6 .question-picker-layout .question-container {
+    padding: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+#screen6 .options-container {
+    gap: var(--spacing-xs);
+}
+
+#screen6 .option {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-height: 44px;
+    gap: var(--spacing-sm);
+}
+
+#screen6 .checkmark {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+}
+
+#screen6 .option input[type="checkbox"]:checked + .checkmark::after {
+    font-size: 16px;
+}
+
+#screen6 .result-text {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-sm) 0;
+}
+
+#screen6 .nav-buttons {
+    margin-top: var(--spacing-md);
+    display: flex;
+    justify-content: flex-start;
 }
