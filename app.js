@@ -632,7 +632,9 @@ async function checkPracticeAnswers() {
 
     // Process each word
     for (const data of wordData) {
-        const resultText = `There are ${data.count} answers that are coloured ${data.colorName} for ${data.word}.`;
+        const resultText = data.count === 1
+            ? `There is ${data.count} answer that is coloured ${data.colorName} for ${data.word}.`
+            : `There are ${data.count} answers that are coloured ${data.colorName} for ${data.word}.`;
 
         // Add to result div
         const p = document.createElement('p');
@@ -653,6 +655,11 @@ async function checkPracticeAnswers() {
         await delay(300);
     }
 
+    // Check the correct answer (d) BEFORE the final speech
+    const practiceCheckboxes = document.querySelectorAll('input[name="practice-answer"]');
+    practiceCheckboxes.forEach(cb => cb.checked = false);
+    document.getElementById('practice-d').checked = true;
+
     // Add final explanation
     const finalText = document.createElement('p');
     finalText.style.marginTop = '16px';
@@ -661,11 +668,6 @@ async function checkPracticeAnswers() {
     resultDiv.appendChild(finalText);
 
     await speakTextWithPromise('Based on the strategy, the answer is d as the words Id, Ego, and Superego appear most frequently across the options.');
-
-    // Check the correct answer (d)
-    const practiceCheckboxes = document.querySelectorAll('input[name="practice-answer"]');
-    practiceCheckboxes.forEach(cb => cb.checked = false);
-    document.getElementById('practice-d').checked = true;
 
     // Show congratulations
     const congratsBox = document.getElementById('congratulations-box');
