@@ -1277,5 +1277,146 @@ h2 {
 #screen6 .nav-buttons {
     margin-top: var(--spacing-md);
     display: flex;
+    justify-content: space-between;
+}
+
+/* ============================================
+   Screen 7 Styles
+   ============================================ */
+
+#screen7 {
+    line-height: 1.5;
+}
+
+/* Screen 7 eraser button in color picker */
+.s7-eraser {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #808080 !important;
+    border-radius: 50%;
+    background: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+}
+
+.s7-eraser .eraser-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.s7-eraser:hover {
+    transform: scale(1.1);
+    border-color: #333 !important;
+}
+
+.s7-eraser.selected {
+    border-color: var(--text-dark) !important;
+    box-shadow: 0 0 0 3px var(--primary-teal);
+}
+
+/* Screen 7 words - interactive */
+#screen7 #screen7-options .word {
+    cursor: pointer;
+    border: 2px dashed transparent;
+    padding: 4px 8px;
+    margin: 0 2px;
+    display: inline-block;
+}
+
+#screen7 #screen7-options .word:hover:not(.highlighted) {
+    border-color: var(--primary-purple);
+    background-color: rgba(123, 73, 171, 0.1);
+}
+
+#screen7 #screen7-options .word:focus {
+    outline: 3px solid var(--primary-teal);
+    outline-offset: 2px;
+}
+
+/* Screen 7 button row - centered */
+.screen7-button-row {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-md) 0;
+}
+
+/* Screen 7 action buttons - light blue with black bold text and 70% grey border */
+.screen7-action-btn {
+    background-color: #cee6ff !important;
+    color: #000000 !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    border: 1px solid #4d4d4d !important;
+    border-radius: var(--border-radius) !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    min-height: 36px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.screen7-action-btn:hover:not(:disabled) {
+    background-color: #b8d9ff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.screen7-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.screen7-action-btn.hidden {
+    display: none;
+}
+
+/* Screen 7 compact spacing */
+#screen7 .instruction-text {
+    margin-bottom: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+#screen7 .question-line {
+    margin-bottom: var(--spacing-xs);
+}
+
+#screen7 .question-picker-layout .question-container {
+    padding: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+#screen7 .options-container {
+    gap: var(--spacing-xs);
+}
+
+#screen7 .option {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    min-height: 44px;
+    gap: var(--spacing-sm);
+}
+
+#screen7 .checkmark {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+}
+
+#screen7 .option input[type="checkbox"]:checked + .checkmark::after {
+    font-size: 16px;
+}
+
+#screen7 .result-text {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-sm) 0;
+}
+
+#screen7 .nav-buttons {
+    margin-top: var(--spacing-md);
+    display: flex;
     justify-content: flex-start;
 }
