@@ -21,6 +21,16 @@ let selectedPracticeWord = null;
 let highlightedWords = new Set(); // Track which word instances have been highlighted
 let totalWordsToHighlight = 0; // Will be calculated on init
 
+// Screen 6 State
+let screen6SelectedColor = null;
+let screen6EraserMode = false;
+let screen6WordColors = {}; // Maps word element index to its highlight color
+
+// Screen 7 State
+let screen7SelectedColor = null;
+let screen7EraserMode = false;
+let screen7WordColors = {}; // Maps word element index to its highlight color
+
 // ============================================
 // Initialization
 // ============================================
@@ -46,6 +56,12 @@ function initializeApp() {
 
     // Initialize practice color picker (Screen 5)
     initializePracticeColorPicker();
+
+    // Initialize Screen 6
+    initializeScreen6();
+
+    // Initialize Screen 7
+    initializeScreen7();
 
     // Set initial font color (dark blue)
     document.body.style.color = '#31579B';
@@ -271,6 +287,16 @@ function goToScreen(screenNum) {
     if (targetScreen) {
         targetScreen.classList.add('active');
         currentScreen = screenNum;
+
+        // Reset Screen 6 when navigating to it
+        if (screenNum === 6) {
+            resetScreen6();
+        }
+
+        // Reset Screen 7 when navigating to it
+        if (screenNum === 7) {
+            resetScreen7();
+        }
 
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -699,3 +725,747 @@ document.addEventListener('visibilitychange', function() {
 window.addEventListener('beforeunload', function() {
     speechSynthesis.cancel();
 });
+
+// ============================================
+// Screen 6 - Planet Question Interactive
+// ============================================
+
+function initializeScreen6() {
+    const colorButtons = document.querySelectorAll('.s6-color');
+    const eraserBtn = document.getElementById('screen6-eraser');
+    const screen6Words = document.querySelectorAll('#screen6-options .s6-word');
+    const screen6Checkboxes = document.querySelectorAll('input[name="screen6-answer"]');
+
+    // Color button click - select color
+    colorButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (isSpeaking) return;
+
+            // Remove selected class from all buttons including eraser
+            colorButtons.forEach(b => b.classList.remove('selected'));
+            eraserBtn.classList.remove('selected');
+
+            // Add selected class to this button
+            this.classList.add('selected');
+
+            // Store selected color and exit eraser mode
+            screen6SelectedColor = this.dataset.color;
+            screen6EraserMode = false;
+        });
+    });
+
+    // Eraser button click
+    eraserBtn.addEventListener('click', function() {
+        if (isSpeaking) return;
+
+        // Remove selected class from all color buttons
+        colorButtons.forEach(b => b.classList.remove('selected'));
+
+        // Toggle eraser selection
+        this.classList.add('selected');
+        screen6EraserMode = true;
+        screen6SelectedColor = null;
+    });
+
+    // Word click - highlight or erase
+    screen6Words.forEach((wordEl, index) => {
+        wordEl.style.cursor = 'pointer';
+        wordEl.setAttribute('tabindex', '0');
+        wordEl.setAttribute('role', 'button');
+
+        const handleWordClick = function(e) {
+            // Stop propagation and prevent default to stop checkbox from being triggered
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (isSpeaking) return;
+
+            if (screen6EraserMode) {
+                // Erase the highlight
+                if (screen6WordColors[index]) {
+                    wordEl.style.backgroundColor = '';
+                    wordEl.classList.remove('highlighted');
+                    delete screen6WordColors[index];
+                }
+            } else if (screen6SelectedColor) {
+                // Highlight with selected color
+                wordEl.style.backgroundColor = screen6SelectedColor;
+                wordEl.classList.add('highlighted');
+                screen6WordColors[index] = screen6SelectedColor;
+            } else {
+                // No color selected
+                showScreen6Modal('Please select a colour from the colour picker first.', 'warning');
+            }
+        };
+
+        wordEl.addEventListener('click', handleWordClick);
+        wordEl.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleWordClick(e);
+            }
+        });
+    });
+
+    // Make checkboxes behave like radio buttons and show/hide check button
+    screen6Checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const checkBtn = document.getElementById('screen6-check-btn');
+
+            if (this.checked) {
+                // Uncheck all other checkboxes
+                screen6Checkboxes.forEach(cb => {
+                    if (cb !== this) {
+                        cb.checked = false;
+                    }
+                });
+                // Show the check button
+                checkBtn.classList.remove('hidden');
+            } else {
+                // If no checkbox is selected, hide the button
+                const anyChecked = Array.from(screen6Checkboxes).some(cb => cb.checked);
+                if (!anyChecked) {
+                    checkBtn.classList.add('hidden');
+                }
+            }
+        });
+    });
+}
+
+function checkScreen6Answer() {
+    const checkBtn = document.getElementById('screen6-check-btn');
+    const screen6Words = document.querySelectorAll('#screen6-options .s6-word');
+    const totalWords = screen6Words.length;
+
+    // Check if all words are highlighted
+    const highlightedCount = Object.keys(screen6WordColors).length;
+
+    if (highlightedCount < totalWords) {
+        // Not all words are highlighted
+        showScreen6Modal('Please finish colour coding all options.', 'warning');
+        return;
+    }
+
+    // Check if a checkbox is selected
+    const selectedAnswer = document.querySelector('input[name="screen6-answer"]:checked');
+
+    if (!selectedAnswer) {
+        showScreen6Modal('Please select an answer by ticking one of the checkboxes.', 'warning');
+        return;
+    }
+
+    // Check if color coding is correct
+    const colorCodingCorrect = isColorCodingCorrect();
+    const answerCorrect = selectedAnswer.value === 'c';
+
+    if (answerCorrect && colorCodingCorrect) {
+        // Correct answer + correct color coding
+        showScreen6Modal('That is the correct answer. Good job!', 'success');
+        checkBtn.disabled = true;
+    } else if (answerCorrect && !colorCodingCorrect) {
+        // Correct answer + wrong color coding
+        showScreen6Modal('That is the correct answer. But the colour coding was a bit mixed up.', 'success');
+        checkBtn.disabled = true;
+    } else if (!answerCorrect && colorCodingCorrect) {
+        // Wrong answer + correct color coding
+        showScreen6Modal('Sorry! That is the wrong answer.', 'error');
+        // Change button to "Explanation"
+        checkBtn.textContent = 'Explanation';
+        checkBtn.onclick = showScreen6Explanation;
+    } else {
+        // Wrong answer + wrong color coding
+        showScreen6Modal('Sorry! That is the wrong answer. Also, the colour coding was a bit mixed up.', 'error');
+        // Change button to "Reset and try again"
+        checkBtn.textContent = 'Reset and try again';
+        checkBtn.onclick = resetScreen6;
+    }
+}
+
+function isColorCodingCorrect() {
+    const screen6Words = document.querySelectorAll('#screen6-options .s6-word');
+
+    // Build a map of word name to colors used
+    const wordToColors = {};
+    const colorToWords = {};
+
+    screen6Words.forEach((wordEl, index) => {
+        const word = wordEl.dataset.word;
+        const color = screen6WordColors[index];
+
+        // Track colors used for each word
+        if (!wordToColors[word]) {
+            wordToColors[word] = new Set();
+        }
+        wordToColors[word].add(color);
+
+        // Track words using each color
+        if (!colorToWords[color]) {
+            colorToWords[color] = new Set();
+        }
+        colorToWords[color].add(word);
+    });
+
+    // Check 1: Same word should have the same color (only one color per word)
+    for (const word in wordToColors) {
+        if (wordToColors[word].size > 1) {
+            return false; // Same word has different colors
+        }
+    }
+
+    // Check 2: Different words should have different colors (each color used for only one word)
+    for (const color in colorToWords) {
+        if (colorToWords[color].size > 1) {
+            return false; // Same color used for different words
+        }
+    }
+
+    return true;
+}
+
+async function showScreen6Explanation() {
+    const checkBtn = document.getElementById('screen6-check-btn');
+    const resultDiv = document.getElementById('screen6-result');
+
+    checkBtn.disabled = true;
+
+    // Hide modal if visible
+    closeScreen6ModalSilent();
+
+    // Tick the correct answer (c)
+    const screen6Checkboxes = document.querySelectorAll('input[name="screen6-answer"]');
+    screen6Checkboxes.forEach(cb => cb.checked = false);
+    document.getElementById('screen6-c').checked = true;
+
+    // Show result div
+    resultDiv.classList.remove('hidden');
+    resultDiv.innerHTML = '';
+
+    // Get all words and their colors
+    const screen6Words = document.querySelectorAll('#screen6-options .s6-word');
+
+    // Build word data - unique words and their occurrences with colors
+    const wordOccurrences = {};
+    screen6Words.forEach((wordEl, index) => {
+        const word = wordEl.dataset.word;
+        const color = screen6WordColors[index];
+
+        if (!wordOccurrences[word]) {
+            wordOccurrences[word] = [];
+        }
+        wordOccurrences[word].push({ index, color, element: wordEl });
+    });
+
+    // Process each unique word
+    for (const word in wordOccurrences) {
+        const occurrences = wordOccurrences[word];
+        const count = occurrences.length;
+
+        // Get the color(s) used - take the first one for display
+        const colorUsed = occurrences[0].color;
+        const colorName = getScreen6ColorName(colorUsed);
+
+        // Create the text with proper grammar
+        const resultText = count === 1
+            ? `There is ${count} answer that is coloured ${colorName} for ${word}.`
+            : `There are ${count} answers that are coloured ${colorName} for ${word}.`;
+
+        // Add to result div
+        const p = document.createElement('p');
+        p.innerHTML = resultText;
+        resultDiv.appendChild(p);
+
+        // Speak the result
+        await speakTextWithPromise(resultText);
+
+        // Flash all instances of this word
+        occurrences.forEach(occ => {
+            occ.element.classList.add('flash');
+        });
+        await delay(1200);
+        occurrences.forEach(occ => {
+            occ.element.classList.remove('flash');
+        });
+
+        await delay(300);
+    }
+
+    // Add final explanation
+    const finalText = document.createElement('p');
+    finalText.style.marginTop = '16px';
+    finalText.style.fontWeight = 'bold';
+    finalText.innerHTML = 'Based on the strategy, the answer is c as all the words have been coloured multiple times.';
+    resultDiv.appendChild(finalText);
+
+    await speakTextWithPromise('Based on the strategy, the answer is c as all the words have been coloured multiple times.');
+
+    // Scroll to result
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    checkBtn.disabled = false;
+}
+
+function getScreen6ColorName(hex) {
+    const colorNames = {
+        '#f5d3ed': 'pink',
+        '#dcf5d3': 'green',
+        '#f6f7b9': 'yellow',
+        '#cee6ff': 'blue',
+        '#f9a2a2': 'red',
+        '#9abecc': 'teal'
+    };
+    return colorNames[hex] || 'this colour';
+}
+
+function showScreen6Modal(message, type) {
+    const modal = document.getElementById('screen6-modal');
+    const modalContent = document.getElementById('screen6-modal-content');
+    const modalText = document.getElementById('screen6-modal-text');
+
+    // Set message
+    modalText.textContent = message;
+
+    // Set type class
+    modalContent.className = 'modal-content';
+    if (type) {
+        modalContent.classList.add(type);
+    }
+
+    // Show modal
+    modal.classList.add('visible');
+
+    // Speak the message
+    speakText(message);
+}
+
+function closeScreen6Modal(event) {
+    // If clicking on the overlay (not the content), close
+    if (event && event.target !== event.currentTarget) {
+        return;
+    }
+
+    const modal = document.getElementById('screen6-modal');
+    modal.classList.remove('visible');
+}
+
+function closeScreen6ModalSilent() {
+    const modal = document.getElementById('screen6-modal');
+    if (modal) {
+        modal.classList.remove('visible');
+    }
+}
+
+function resetScreen6() {
+    // Reset state
+    screen6SelectedColor = null;
+    screen6EraserMode = false;
+    screen6WordColors = {};
+
+    // Clear word highlights
+    const screen6Words = document.querySelectorAll('#screen6-options .s6-word');
+    screen6Words.forEach(word => {
+        word.style.backgroundColor = '';
+        word.classList.remove('highlighted', 'flash');
+    });
+
+    // Clear color button selections
+    const colorButtons = document.querySelectorAll('.s6-color');
+    colorButtons.forEach(btn => btn.classList.remove('selected'));
+    const eraserBtn = document.getElementById('screen6-eraser');
+    if (eraserBtn) eraserBtn.classList.remove('selected');
+
+    // Reset checkboxes
+    const screen6Checkboxes = document.querySelectorAll('input[name="screen6-answer"]');
+    screen6Checkboxes.forEach(cb => cb.checked = false);
+
+    // Reset and hide check button
+    const checkBtn = document.getElementById('screen6-check-btn');
+    if (checkBtn) {
+        checkBtn.textContent = 'Check your answer';
+        checkBtn.onclick = checkScreen6Answer;
+        checkBtn.disabled = false;
+        checkBtn.classList.add('hidden');
+    }
+
+    // Hide modal
+    closeScreen6ModalSilent();
+
+    // Hide result
+    const resultDiv = document.getElementById('screen6-result');
+    if (resultDiv) {
+        resultDiv.classList.add('hidden');
+        resultDiv.innerHTML = '';
+    }
+}
+
+// ============================================
+// Screen 7 - Animal Mammals Question Interactive
+// ============================================
+
+function initializeScreen7() {
+    const colorButtons = document.querySelectorAll('.s7-color');
+    const eraserBtn = document.getElementById('screen7-eraser');
+    const screen7Words = document.querySelectorAll('#screen7-options .s7-word');
+    const screen7Checkboxes = document.querySelectorAll('input[name="screen7-answer"]');
+
+    // Color button click - select color
+    colorButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (isSpeaking) return;
+
+            // Remove selected class from all buttons including eraser
+            colorButtons.forEach(b => b.classList.remove('selected'));
+            eraserBtn.classList.remove('selected');
+
+            // Add selected class to this button
+            this.classList.add('selected');
+
+            // Store selected color and exit eraser mode
+            screen7SelectedColor = this.dataset.color;
+            screen7EraserMode = false;
+        });
+    });
+
+    // Eraser button click
+    eraserBtn.addEventListener('click', function() {
+        if (isSpeaking) return;
+
+        // Remove selected class from all color buttons
+        colorButtons.forEach(b => b.classList.remove('selected'));
+
+        // Toggle eraser selection
+        this.classList.add('selected');
+        screen7EraserMode = true;
+        screen7SelectedColor = null;
+    });
+
+    // Word click - highlight or erase
+    screen7Words.forEach((wordEl, index) => {
+        wordEl.style.cursor = 'pointer';
+        wordEl.setAttribute('tabindex', '0');
+        wordEl.setAttribute('role', 'button');
+
+        const handleWordClick = function(e) {
+            // Stop propagation and prevent default to stop checkbox from being triggered
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (isSpeaking) return;
+
+            if (screen7EraserMode) {
+                // Erase the highlight
+                if (screen7WordColors[index]) {
+                    wordEl.style.backgroundColor = '';
+                    wordEl.classList.remove('highlighted');
+                    delete screen7WordColors[index];
+                }
+            } else if (screen7SelectedColor) {
+                // Highlight with selected color
+                wordEl.style.backgroundColor = screen7SelectedColor;
+                wordEl.classList.add('highlighted');
+                screen7WordColors[index] = screen7SelectedColor;
+            } else {
+                // No color selected
+                showScreen7Modal('Please select a colour from the colour picker first.', 'warning');
+            }
+        };
+
+        wordEl.addEventListener('click', handleWordClick);
+        wordEl.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                handleWordClick(e);
+            }
+        });
+    });
+
+    // Make checkboxes behave like radio buttons and show/hide check button
+    screen7Checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const checkBtn = document.getElementById('screen7-check-btn');
+
+            if (this.checked) {
+                // Uncheck all other checkboxes
+                screen7Checkboxes.forEach(cb => {
+                    if (cb !== this) {
+                        cb.checked = false;
+                    }
+                });
+                // Show the check button
+                checkBtn.classList.remove('hidden');
+            } else {
+                // If no checkbox is selected, hide the button
+                const anyChecked = Array.from(screen7Checkboxes).some(cb => cb.checked);
+                if (!anyChecked) {
+                    checkBtn.classList.add('hidden');
+                }
+            }
+        });
+    });
+}
+
+function checkScreen7Answer() {
+    const checkBtn = document.getElementById('screen7-check-btn');
+    const screen7Words = document.querySelectorAll('#screen7-options .s7-word');
+    const totalWords = screen7Words.length;
+
+    // Check if all words are highlighted
+    const highlightedCount = Object.keys(screen7WordColors).length;
+
+    if (highlightedCount < totalWords) {
+        // Not all words are highlighted
+        showScreen7Modal('Please finish colour coding all options.', 'warning');
+        return;
+    }
+
+    // Check if a checkbox is selected
+    const selectedAnswer = document.querySelector('input[name="screen7-answer"]:checked');
+
+    if (!selectedAnswer) {
+        showScreen7Modal('Please select an answer by ticking one of the checkboxes.', 'warning');
+        return;
+    }
+
+    // Check if color coding is correct
+    const colorCodingCorrect = isScreen7ColorCodingCorrect();
+    const answerCorrect = selectedAnswer.value === 'b';
+
+    if (answerCorrect && colorCodingCorrect) {
+        // Correct answer + correct color coding
+        showScreen7Modal('That is the correct answer. Good job!', 'success');
+        checkBtn.disabled = true;
+    } else if (answerCorrect && !colorCodingCorrect) {
+        // Correct answer + wrong color coding
+        showScreen7Modal('That is the correct answer. But the colour coding was a bit mixed up.', 'success');
+        checkBtn.disabled = true;
+    } else if (!answerCorrect && colorCodingCorrect) {
+        // Wrong answer + correct color coding
+        showScreen7Modal('Sorry! That is the wrong answer.', 'error');
+        // Change button to "Explanation"
+        checkBtn.textContent = 'EXPLANATION';
+        checkBtn.onclick = showScreen7Explanation;
+    } else {
+        // Wrong answer + wrong color coding
+        showScreen7Modal('Sorry! That is the wrong answer. Also, the colour coding was a bit mixed up.', 'error');
+        // Change button to "Reset and try again"
+        checkBtn.textContent = 'RESET AND TRY AGAIN';
+        checkBtn.onclick = resetScreen7;
+    }
+}
+
+function isScreen7ColorCodingCorrect() {
+    const screen7Words = document.querySelectorAll('#screen7-options .s7-word');
+
+    // Build a map of word name to colors used
+    const wordToColors = {};
+    const colorToWords = {};
+
+    screen7Words.forEach((wordEl, index) => {
+        const word = wordEl.dataset.word;
+        const color = screen7WordColors[index];
+
+        // Track colors used for each word
+        if (!wordToColors[word]) {
+            wordToColors[word] = new Set();
+        }
+        wordToColors[word].add(color);
+
+        // Track words using each color
+        if (!colorToWords[color]) {
+            colorToWords[color] = new Set();
+        }
+        colorToWords[color].add(word);
+    });
+
+    // Check 1: Same word should have the same color (only one color per word)
+    for (const word in wordToColors) {
+        if (wordToColors[word].size > 1) {
+            return false; // Same word has different colors
+        }
+    }
+
+    // Check 2: Different words should have different colors (each color used for only one word)
+    for (const color in colorToWords) {
+        if (colorToWords[color].size > 1) {
+            return false; // Same color used for different words
+        }
+    }
+
+    return true;
+}
+
+function getScreen7ColorName(hex) {
+    const colorNames = {
+        '#f5d3ed': 'pink',
+        '#dcf5d3': 'green',
+        '#f6f7b9': 'yellow',
+        '#cee6ff': 'blue',
+        '#f9a2a2': 'red',
+        '#9abecc': 'teal'
+    };
+    return colorNames[hex] || 'this colour';
+}
+
+async function showScreen7Explanation() {
+    const checkBtn = document.getElementById('screen7-check-btn');
+    const resultDiv = document.getElementById('screen7-result');
+
+    checkBtn.disabled = true;
+
+    // Hide modal if visible
+    closeScreen7ModalSilent();
+
+    // Tick the correct answer (b)
+    const screen7Checkboxes = document.querySelectorAll('input[name="screen7-answer"]');
+    screen7Checkboxes.forEach(cb => cb.checked = false);
+    document.getElementById('screen7-b').checked = true;
+
+    // Show result div
+    resultDiv.classList.remove('hidden');
+    resultDiv.innerHTML = '';
+
+    // Get all words and their colors
+    const screen7Words = document.querySelectorAll('#screen7-options .s7-word');
+
+    // Build word data - unique words and their occurrences with colors
+    const wordOccurrences = {};
+    screen7Words.forEach((wordEl, index) => {
+        const word = wordEl.dataset.word;
+        const color = screen7WordColors[index];
+
+        if (!wordOccurrences[word]) {
+            wordOccurrences[word] = [];
+        }
+        wordOccurrences[word].push({ index, color, element: wordEl });
+    });
+
+    // Process each unique word
+    for (const word in wordOccurrences) {
+        const occurrences = wordOccurrences[word];
+        const count = occurrences.length;
+
+        // Get the color(s) used - take the first one for display
+        const colorUsed = occurrences[0].color;
+        const colorName = getScreen7ColorName(colorUsed);
+
+        // Create the text with proper grammar
+        const resultText = count === 1
+            ? `There is ${count} answer that is coloured ${colorName} for ${word}.`
+            : `There are ${count} answers that are coloured ${colorName} for ${word}.`;
+
+        // Add to result div
+        const p = document.createElement('p');
+        p.innerHTML = resultText;
+        resultDiv.appendChild(p);
+
+        // Speak the result
+        await speakTextWithPromise(resultText);
+
+        // Flash all instances of this word
+        occurrences.forEach(occ => {
+            occ.element.classList.add('flash');
+        });
+        await delay(1200);
+        occurrences.forEach(occ => {
+            occ.element.classList.remove('flash');
+        });
+
+        await delay(300);
+    }
+
+    // Add final explanation
+    const finalText = document.createElement('p');
+    finalText.style.marginTop = '16px';
+    finalText.style.fontWeight = 'bold';
+    finalText.innerHTML = 'Based on the strategy, the answer is B as all the words in it have been coloured multiple times.';
+    resultDiv.appendChild(finalText);
+
+    await speakTextWithPromise('Based on the strategy, the answer is B as all the words in it have been coloured multiple times.');
+
+    // Scroll to result
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    checkBtn.disabled = false;
+}
+
+function showScreen7Modal(message, type) {
+    const modal = document.getElementById('screen7-modal');
+    const modalContent = document.getElementById('screen7-modal-content');
+    const modalText = document.getElementById('screen7-modal-text');
+
+    // Set message
+    modalText.textContent = message;
+
+    // Set type class
+    modalContent.className = 'modal-content';
+    if (type) {
+        modalContent.classList.add(type);
+    }
+
+    // Show modal
+    modal.classList.add('visible');
+
+    // Speak the message
+    speakText(message);
+}
+
+function closeScreen7Modal(event) {
+    // If clicking on the overlay (not the content), close
+    if (event && event.target !== event.currentTarget) {
+        return;
+    }
+
+    const modal = document.getElementById('screen7-modal');
+    modal.classList.remove('visible');
+}
+
+function closeScreen7ModalSilent() {
+    const modal = document.getElementById('screen7-modal');
+    if (modal) {
+        modal.classList.remove('visible');
+    }
+}
+
+function resetScreen7() {
+    // Reset state
+    screen7SelectedColor = null;
+    screen7EraserMode = false;
+    screen7WordColors = {};
+
+    // Clear word highlights
+    const screen7Words = document.querySelectorAll('#screen7-options .s7-word');
+    screen7Words.forEach(word => {
+        word.style.backgroundColor = '';
+        word.classList.remove('highlighted', 'flash');
+    });
+
+    // Clear color button selections
+    const colorButtons = document.querySelectorAll('.s7-color');
+    colorButtons.forEach(btn => btn.classList.remove('selected'));
+    const eraserBtn = document.getElementById('screen7-eraser');
+    if (eraserBtn) eraserBtn.classList.remove('selected');
+
+    // Reset checkboxes
+    const screen7Checkboxes = document.querySelectorAll('input[name="screen7-answer"]');
+    screen7Checkboxes.forEach(cb => cb.checked = false);
+
+    // Reset and hide check button
+    const checkBtn = document.getElementById('screen7-check-btn');
+    if (checkBtn) {
+        checkBtn.textContent = 'CHECK YOUR ANSWER';
+        checkBtn.onclick = checkScreen7Answer;
+        checkBtn.disabled = false;
+        checkBtn.classList.add('hidden');
+    }
+
+    // Hide modal
+    closeScreen7ModalSilent();
+
+    // Hide result
+    const resultDiv = document.getElementById('screen7-result');
+    if (resultDiv) {
+        resultDiv.classList.add('hidden');
+        resultDiv.innerHTML = '';
+    }
+}
